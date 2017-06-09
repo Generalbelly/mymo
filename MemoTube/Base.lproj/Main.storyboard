@@ -1,26 +1,195 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vFs-90-aXK">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Youtube-->
+        <scene sceneID="Aki-b1-Jgv">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="tQg-Fh-5Ca" customClass="YouTubeViewController" customModule="MemoTube" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
-                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                        <viewControllerLayoutGuide type="top" id="ypZ-uq-Xmq"/>
+                        <viewControllerLayoutGuide type="bottom" id="G2c-st-0kM"/>
                     </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                    <view key="view" contentMode="scaleToFill" id="SQy-Z1-5Vb">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zAs-qm-Jey" customClass="Floaty" customModule="Floaty">
+                                <rect key="frame" x="299" y="550" width="60" height="60"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="1hT-cZ-zNY"/>
+                                    <constraint firstAttribute="height" constant="60" id="8Sf-dy-BuL"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="60" id="8p8-TO-a1U"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="60" id="cm7-SB-40z"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="buttonColor">
+                                        <color key="value" red="0.090196078431372548" green="0.066666666666666666" blue="0.13725490196078433" alpha="0.79936322773972601" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="plusColor">
+                                        <color key="value" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="39j-wx-Nve">
+                                <rect key="frame" x="70" y="562" width="36" height="36"/>
+                                <color key="backgroundColor" red="0.090196078431372548" green="0.066666666666666666" blue="0.13725490196078433" alpha="0.79944349315068497" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" image="right"/>
+                                <connections>
+                                    <action selector="forwardButtonTapped:" destination="tQg-Fh-5Ca" eventType="touchUpInside" id="QNq-v5-B5a"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aqZ-T9-RKR">
+                                <rect key="frame" x="16" y="562" width="36" height="36"/>
+                                <color key="backgroundColor" red="0.090196078431372548" green="0.066666666666666666" blue="0.13725490196078433" alpha="0.79639340753424659" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="36" id="K0g-7C-oP3"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Button" image="left"/>
+                                <connections>
+                                    <action selector="backButtonTapped:" destination="tQg-Fh-5Ca" eventType="touchUpInside" id="Qf7-AF-vze"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="aqZ-T9-RKR" firstAttribute="leading" secondItem="SQy-Z1-5Vb" secondAttribute="leadingMargin" id="4WP-4s-9NX"/>
+                            <constraint firstItem="aqZ-T9-RKR" firstAttribute="centerY" secondItem="zAs-qm-Jey" secondAttribute="centerY" id="77G-RG-56G"/>
+                            <constraint firstAttribute="bottom" secondItem="zAs-qm-Jey" secondAttribute="bottom" constant="57" id="T9T-ue-Ld1"/>
+                            <constraint firstItem="39j-wx-Nve" firstAttribute="top" secondItem="aqZ-T9-RKR" secondAttribute="top" id="XGc-iN-zV6"/>
+                            <constraint firstItem="zAs-qm-Jey" firstAttribute="trailing" secondItem="SQy-Z1-5Vb" secondAttribute="trailingMargin" id="ahM-SC-30N"/>
+                            <constraint firstItem="39j-wx-Nve" firstAttribute="leading" secondItem="aqZ-T9-RKR" secondAttribute="trailing" constant="18" id="x0s-1d-W5p"/>
+                        </constraints>
                     </view>
+                    <tabBarItem key="tabBarItem" title="Youtube" image="youtube" id="CXa-tS-PbA"/>
+                    <connections>
+                        <outlet property="backButton" destination="aqZ-T9-RKR" id="q1j-GZ-0LL"/>
+                        <outlet property="forwardButton" destination="39j-wx-Nve" id="yz4-BO-AYc"/>
+                        <outlet property="menuButton" destination="zAs-qm-Jey" id="kuX-hQ-WPu"/>
+                        <segue destination="s40-E2-ViN" kind="presentation" identifier="memoVC" id="Idh-Dm-RcL"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cxJ-X7-MjN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="1884" y="133.5832083958021"/>
+        </scene>
+        <!--Memos-->
+        <scene sceneID="94b-jp-7Gn">
+            <objects>
+                <viewController id="o9b-Vp-DqO" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AHf-O2-Kiu"/>
+                        <viewControllerLayoutGuide type="bottom" id="K1G-MB-SO9"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yaM-iS-Zn5">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <tabBarItem key="tabBarItem" title="Memos" image="list" id="qO0-iX-pYO"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="47S-gZ-z9q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1884" y="868"/>
+        </scene>
+        <!--Memo View Controller-->
+        <scene sceneID="2UJ-ME-Djk">
+            <objects>
+                <viewController id="8rP-Ng-UjH" customClass="MemoViewController" customModule="MemoTube" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="qNg-T9-kmc"/>
+                        <viewControllerLayoutGuide type="bottom" id="gKj-NE-5cF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="D9K-tQ-RSj">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ZDM-oO-c8C">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ZDM-oO-c8C" firstAttribute="bottom" secondItem="gKj-NE-5cF" secondAttribute="top" id="Bto-lg-619"/>
+                            <constraint firstItem="ZDM-oO-c8C" firstAttribute="leading" secondItem="D9K-tQ-RSj" secondAttribute="leading" id="Bxo-gW-TqL"/>
+                            <constraint firstItem="ZDM-oO-c8C" firstAttribute="top" secondItem="qNg-T9-kmc" secondAttribute="bottom" id="EfF-Kl-MLh"/>
+                            <constraint firstAttribute="trailing" secondItem="ZDM-oO-c8C" secondAttribute="trailing" id="eSc-yy-ump"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="sY3-79-lYP">
+                        <barButtonItem key="leftBarButtonItem" title="Close" id="GkB-EI-opg">
+                            <connections>
+                                <action selector="cancelTapped:" destination="8rP-Ng-UjH" id="UPJ-SI-njt"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="mam-1t-q6j">
+                            <connections>
+                                <action selector="saveTapped:" destination="8rP-Ng-UjH" id="ter-wX-ywN"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="textView" destination="ZDM-oO-c8C" id="2M0-bK-HyJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="szZ-Ls-Mev" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3660" y="133.5832083958021"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="ETO-nT-JcW">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aNH-0o-Unc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="s40-E2-ViN" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="od7-YB-VrS">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="8rP-Ng-UjH" kind="relationship" relationship="rootViewController" id="XVL-4O-VQk"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="2784.8000000000002" y="133.5832083958021"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="ly0-hq-BMj">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="vFs-90-aXK" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" id="F0I-Ta-YAW">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="tQg-Fh-5Ca" kind="relationship" relationship="viewControllers" id="mbP-fa-hE0"/>
+                        <segue destination="o9b-Vp-DqO" kind="relationship" relationship="viewControllers" id="vzO-Lm-owT"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="M9A-Zq-3Vt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="944.79999999999995" y="133.5832083958021"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="left" width="36" height="36"/>
+        <image name="list" width="24" height="18"/>
+        <image name="right" width="36" height="36"/>
+        <image name="youtube" width="24" height="18"/>
+    </resources>
 </document>

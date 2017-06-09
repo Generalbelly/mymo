@@ -1,0 +1,19 @@
+# Uncomment the next line to define a global platform for your project
+platform :ios, '9.0'
+
+target 'MemoTube' do
+  # Comment the next line if you're not using Swift and don't want to use dynamic frameworks
+  use_frameworks!
+
+  # Pods for MemoTube
+    pod 'Firebase/Core'
+    pod 'Firebase/Auth'
+    pod 'Firebase/Database'
+    pod 'FirebaseUI/Auth', '~> 4.0'
+    pod 'FirebaseUI/Facebook', '~> 4.0'
+    pod 'FirebaseUI/Google', '~> 4.0'
+    pod 'Floaty', '~> 3.0.0'
+    pod 'Alamofire', '~> 4.4'
+    pod 'SwiftyJSON'
+    pod 'SWXMLHash', '~> 4.0.0'
+end
