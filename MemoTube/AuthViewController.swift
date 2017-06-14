@@ -35,7 +35,7 @@ class AuthViewController: FUIAuthPickerViewController {
         textView.textColor = .white
         textView.textAlignment = .center
         textView.font = UIFont.boldSystemFont(ofSize: 18)
-        textView.text = "Memo taking while watching YouTube has never been this easy."
+        textView.text = "Start saving your favorite moments of YouTube"
         
         let imageViewBackground = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         imageViewBackground.image = UIImage(named: "background")

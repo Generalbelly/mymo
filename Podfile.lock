@@ -1,11 +1,13 @@
 PODS:
   - Alamofire (4.4.0)
+  - AlgoliaSearch-Client-Swift (4.8.1)
   - Bolts (1.8.4):
     - Bolts/AppLinks (= 1.8.4)
     - Bolts/Tasks (= 1.8.4)
   - Bolts/AppLinks (1.8.4):
     - Bolts/Tasks
   - Bolts/Tasks (1.8.4)
+  - DZNEmptyDataSet (1.8.1)
   - FBSDKCoreKit (4.23.0):
     - Bolts (~> 1.7)
   - FBSDKLoginKit (4.23.0):
@@ -64,11 +66,15 @@ PODS:
   - GTMSessionFetcher/Core (1.1.10)
   - GTMSessionFetcher/Full (1.1.10):
     - GTMSessionFetcher/Core (= 1.1.10)
-  - SwiftyJSON (3.1.4)
+  - SDWebImage (4.0.0):
+    - SDWebImage/Core (= 4.0.0)
+  - SDWebImage/Core (4.0.0)
   - SWXMLHash (4.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.4)
+  - AlgoliaSearch-Client-Swift (~> 4.0)
+  - DZNEmptyDataSet
   - Firebase/Auth
   - Firebase/Core
   - Firebase/Database
@@ -76,12 +82,14 @@ DEPENDENCIES:
   - FirebaseUI/Facebook (~> 4.0)
   - FirebaseUI/Google (~> 4.0)
   - Floaty (~> 3.0.0)
-  - SwiftyJSON
+  - SDWebImage (~> 4.0)
   - SWXMLHash (~> 4.0.0)
 
 SPEC CHECKSUMS:
   Alamofire: dc44b1600b800eb63da6a19039a0083d62a6a62d
+  AlgoliaSearch-Client-Swift: 5bdfbc8727f203773245e2410edd7a9c8e831637
   Bolts: 8a7995239dbe724f9cba2248b766d48b7ebdd322
+  DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   FBSDKCoreKit: d7829f5a69901cd7296105328e4c3c3fc7da6518
   FBSDKLoginKit: 6b92bd65f319d669d2b0730e49db495ef1660566
   Firebase: 284eea779b73fdff309791817da7c68bff8dd572
@@ -96,9 +104,9 @@ SPEC CHECKSUMS:
   GoogleToolboxForMac: 8e329f1b599f2512c6b10676d45736bcc2cbbeb0
   GTMOAuth2: 7fc9c10f5c745f4d9850419ea88889fe3baa6b7d
   GTMSessionFetcher: 30d874b96d0d76028f61fbd122801e3f030d47db
-  SwiftyJSON: c2842d878f95482ffceec5709abc3d05680c0220
+  SDWebImage: 76a6348bdc74eb5a55dd08a091ef298e56b55e41
   SWXMLHash: 6bbc0bf72975a18ceda469fb7d6a886a26d81694
 
-PODFILE CHECKSUM: ca723c601473a1e29a7edb6560b519d7b355200c
+PODFILE CHECKSUM: 529efd80a95eba9ee5f480a5d8c31ef134de363c
 
 COCOAPODS: 1.2.1

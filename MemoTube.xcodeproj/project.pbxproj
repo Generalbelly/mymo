@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		001C12451EE25AB60001B3AF /* YouTubeClient.js in Resources */ = {isa = PBXBuildFile; fileRef = 001C12441EE25AB60001B3AF /* YouTubeClient.js */; };
-		001C12471EE456770001B3AF /* MemoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 001C12461EE456770001B3AF /* MemoViewController.swift */; };
 		00427F501EE05569004CB0B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00427F4F1EE05569004CB0B7 /* AppDelegate.swift */; };
 		00427F551EE05569004CB0B7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 00427F531EE05569004CB0B7 /* Main.storyboard */; };
 		00427F571EE05569004CB0B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00427F561EE05569004CB0B7 /* Assets.xcassets */; };
@@ -19,12 +18,15 @@
 		00AD04001EE82C9800F895BE /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AD03FF1EE82C9800F895BE /* AuthViewController.swift */; };
 		00AD04021EE8527D00F895BE /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AD04011EE8527D00F895BE /* Util.swift */; };
 		00AD04041EE98D1F00F895BE /* YouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AD04031EE98D1F00F895BE /* YouTubeClient.swift */; };
+		00B0E7021EEBF39D007F7BD4 /* AlgoliaClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7011EEBF39D007F7BD4 /* AlgoliaClient.swift */; };
+		00B0E7041EEC03F3007F7BD4 /* FirebaseClientHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7031EEC03F3007F7BD4 /* FirebaseClientHelper.swift */; };
+		00B0E7061EEC1E37007F7BD4 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */; };
+		00B0E7081EEC213F007F7BD4 /* ListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7071EEC213F007F7BD4 /* ListViewCell.swift */; };
 		4C315E1AB2312C2EF312F12B /* Pods_MemoTube.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7DF22162070CCDE0AF7108A /* Pods_MemoTube.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		001C12441EE25AB60001B3AF /* YouTubeClient.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; path = YouTubeClient.js; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
-		001C12461EE456770001B3AF /* MemoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MemoViewController.swift; sourceTree = "<group>"; };
 		00427F4C1EE05569004CB0B7 /* MemoTube.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MemoTube.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		00427F4F1EE05569004CB0B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		00427F541EE05569004CB0B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -38,6 +40,10 @@
 		00AD03FF1EE82C9800F895BE /* AuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		00AD04011EE8527D00F895BE /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		00AD04031EE98D1F00F895BE /* YouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeClient.swift; sourceTree = "<group>"; };
+		00B0E7011EEBF39D007F7BD4 /* AlgoliaClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlgoliaClient.swift; sourceTree = "<group>"; };
+		00B0E7031EEC03F3007F7BD4 /* FirebaseClientHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseClientHelper.swift; sourceTree = "<group>"; };
+		00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
+		00B0E7071EEC213F007F7BD4 /* ListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewCell.swift; sourceTree = "<group>"; };
 		0F717AB41078D283AED3F653 /* Pods-MemoTube.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoTube.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MemoTube/Pods-MemoTube.debug.xcconfig"; sourceTree = "<group>"; };
 		8B68881039343BE0D2CC1435 /* Pods-MemoTube.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoTube.release.xcconfig"; path = "Pods/Target Support Files/Pods-MemoTube/Pods-MemoTube.release.xcconfig"; sourceTree = "<group>"; };
 		D7DF22162070CCDE0AF7108A /* Pods_MemoTube.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MemoTube.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -80,8 +86,11 @@
 				00AD03FF1EE82C9800F895BE /* AuthViewController.swift */,
 				00427F681EE18F54004CB0B7 /* YouTubeViewController.swift */,
 				00AD03FB1EE582D500F895BE /* Memo.swift */,
-				001C12461EE456770001B3AF /* MemoViewController.swift */,
 				00AD04031EE98D1F00F895BE /* YouTubeClient.swift */,
+				00B0E7011EEBF39D007F7BD4 /* AlgoliaClient.swift */,
+				00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */,
+				00B0E7071EEC213F007F7BD4 /* ListViewCell.swift */,
+				00B0E7031EEC03F3007F7BD4 /* FirebaseClientHelper.swift */,
 				00AD04011EE8527D00F895BE /* Util.swift */,
 				001C12441EE25AB60001B3AF /* YouTubeClient.js */,
 				00427F531EE05569004CB0B7 /* Main.storyboard */,
@@ -238,12 +247,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				001C12471EE456770001B3AF /* MemoViewController.swift in Sources */,
+				00B0E7081EEC213F007F7BD4 /* ListViewCell.swift in Sources */,
+				00B0E7041EEC03F3007F7BD4 /* FirebaseClientHelper.swift in Sources */,
 				00AD04021EE8527D00F895BE /* Util.swift in Sources */,
 				00427F691EE18F54004CB0B7 /* YouTubeViewController.swift in Sources */,
 				00AD04041EE98D1F00F895BE /* YouTubeClient.swift in Sources */,
 				00427F501EE05569004CB0B7 /* AppDelegate.swift in Sources */,
 				00AD04001EE82C9800F895BE /* AuthViewController.swift in Sources */,
+				00B0E7021EEBF39D007F7BD4 /* AlgoliaClient.swift in Sources */,
+				00B0E7061EEC1E37007F7BD4 /* ListViewController.swift in Sources */,
 				00AD03FC1EE582D500F895BE /* Memo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

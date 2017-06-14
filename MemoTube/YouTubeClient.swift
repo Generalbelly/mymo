@@ -8,92 +8,73 @@
 
 import Foundation
 import Alamofire
-import SwiftyJSON
 import SWXMLHash
 
 final class YouTubeClient {
+  
+    let baseUrl = "http://video.google.com/timedtext"
+    let lang = "en"
     
     private init() { }
     static let shared = YouTubeClient()
 
-    let baseUrl = "http://video.google.com/timedtext"
-//    let baseUrl = "https://www.googleapis.com/youtube/v3/"
-    let lang = "en"
-    var accessToken = ""
-//    var ccList: [String] = []
-//    var ccTrackName: String?
-    
-    func fetchCaptionId(videoId: String, completionHandler:@escaping (String?) -> ()) {
+    func fetchCaptionName(videoId: String, completionHandler:@escaping (String?) -> ()) {
         let params = [
             "type": "list",
             "v": videoId,
             ]
         self.request(parameters: params) { data in
             if data != nil {
-                //<transcript_list docid="xxxxxxxxxxxxxxxxxx">
-//                <track id="0" name="hogehoge" lang_code="en" lang_original="English" lang_translated="English" lang_default="true"/>
-//                <track id="1" name="ほげほげ" lang_code="ja" lang_original="日本語" lang_translated="Japanese"/>
-//                </transcript_list>
-//                
                 let xml = SWXMLHash.lazy(data!)
-                let caption = xml["transcript_list"]["track"].all.filter{ elem in elem.attribute(by: "lang_code")?.text == "en"}[0]
-                print(caption)
-            }
-            completionHandler(nil)
-        }
-//        let params = [
-//            "part": "snippet",
-//            "videoId": videoId,
-//        ]
-//        self.request(endpoint: "captions", parameters: params) { data in
-//            if data != nil {
-//                let json = JSON(data!)
-//                if let items = json["items"].array {
-//                    if items.count > 0 {
-//                        let captionId = items.filter({ item in item["snippet"]["language"] == "en" })[0]["id"].string
-//                        completionHandler(captionId!)
-//                    }
-//                }
-//            }
-//            completionHandler(nil)
-//        }
-    }
-    
-    func fetchCaption(captionId: String) {
-        let params = [
-            "tfmt": "ttml"
-            
-        ]
-        self.request(parameters: params) { data in
-        }
-    }
-    
-    func request(parameters: [String: String]?, completionHandler:@escaping (Data?) -> ()) {
-        Alamofire.request(self.baseUrl,  parameters: parameters).responseData { response in
-            if let data = response.result.value {
-                print("Data: \(data)")
-                completionHandler(data)
+                let tracks = xml["transcript_list"]["track"].all
+                if !tracks.isEmpty {
+                    let captions = tracks.filter{ elem in elem.element?.attribute(by: "lang_code")?.text == self.lang}
+                    if !captions.isEmpty {
+                        completionHandler(captions[0].element?.attribute(by: "name")?.text)
+                    }
+                } else {
+                    completionHandler(nil)
+                }
             } else {
                 completionHandler(nil)
             }
         }
     }
     
-//    func request(endpoint: String, parameters: [String: String]?, completionHandler:@escaping (Any?) -> ()) {
-//        let headers: HTTPHeaders = [
-//            "Authorization": "Bearer \(self.accessToken)",
-//            "Accept": "application/json"
-//        ]
-//        Alamofire.request(self.baseUrl + endpoint,  parameters: parameters, headers: headers).responseJSON { response in
-//            print("Request: \(response.request)")
-//            print("Response: \(response.response)")
-//            print("Error: \(response.error)")
-//            if let data = response.result.value {
-//                print("Data: \(data)")
-//                completionHandler(data)
-//            } else {
-//                completionHandler(nil)
-//            }
-//        }
-//    }
+    func fetchCaption(videoId: String, name: String, completionHandler:@escaping ([[String: String]]?) -> ()) {
+        let params = [
+            "lang": "en",
+            "name": name,
+            "v": videoId,
+        ]
+        self.request(parameters: params) { data in
+            if data != nil {
+                let xml = SWXMLHash.lazy(data!)
+                let rawTexts = xml["transcript"]["text"].all
+                if !rawTexts.isEmpty {
+                    let texts = rawTexts.map({ elem -> [String : String] in
+                        let time = elem.element!.attribute(by: "start")!.text
+                        let text = elem.element!.text
+                        return ["text": text, "time": time]
+                    })
+                    completionHandler(texts)
+                } else {
+                    completionHandler(nil)
+                }
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
+    
+    func request(parameters: [String: String]?, completionHandler:@escaping (Data?) -> ()) {
+        Alamofire.request(self.baseUrl,  parameters: parameters).responseData { response in
+            print(response.request)
+            if let data = response.result.value {
+                completionHandler(data)
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
 }

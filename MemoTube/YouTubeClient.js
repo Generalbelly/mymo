@@ -40,6 +40,11 @@ function play() {
   video.play();
 }
 
+function seekTo(time) {
+  video = getVideo();
+  video.currentTime = time;
+}
+
 function applyInlinePlay() {
   video = getVideo();
   var attrList = ['webkit-playsinline', 'playsinline', 'controls'];
