@@ -370,9 +370,9 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     }
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        if(message.name == "memotube") {
-            print("JavaScript is sending a message \(message.body)")
-        }
+//        if(message.name == "memotube") {
+//            print("JavaScript is sending a message \(message.body)")
+//        }
     }
 
 }

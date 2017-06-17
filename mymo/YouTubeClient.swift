@@ -69,7 +69,6 @@ final class YouTubeClient {
     
     func request(parameters: [String: String]?, completionHandler:@escaping (Data?) -> ()) {
         Alamofire.request(self.baseUrl,  parameters: parameters).responseData { response in
-            print(response.request)
             if let data = response.result.value {
                 completionHandler(data)
             } else {
