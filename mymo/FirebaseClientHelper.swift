@@ -1,6 +1,6 @@
 //
 //  FirebaseClientHelper.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/10.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.
@@ -17,7 +17,7 @@ class FirebaseClientHelper {
     }
     static let shared = FirebaseClientHelper()
     var ref: DatabaseReference!
-    var memoRef: DatabaseReference!
+    var momentRef: DatabaseReference!
     var user: User?
     
     func fetch(path: String, completionHandler: @escaping (DataSnapshot?) -> ()) {
@@ -29,8 +29,23 @@ class FirebaseClientHelper {
         })
     }
     
+    func fetchOnce(path: String, completionHandler: @escaping ([String: Any]?) -> ()) {
+        self.ref.child(path).observeSingleEvent(of: .value, with: { (snapshot) in
+            print(snapshot.value!)
+            completionHandler(snapshot.value! as? [String: Any])
+        }) { (error) in
+            print(error.localizedDescription)
+        }
+    }
+
     func push(data: [String: Any?], path: String) {
-        self.ref.child(path).childByAutoId().setValue(data)
+        let timestamp = ServerValue.timestamp()
+        var data = data
+        let uid = self.ref.childByAutoId().key
+        data["key"] = uid
+        data["addedTime"] = timestamp
+        data["updatedTime"] = timestamp
+        self.ref.child(path).child(uid).setValue(data)
     }
     
     func update(data: Any, path: String) {
@@ -48,8 +63,11 @@ class FirebaseClientHelper {
     }
     
     func getPath(object: String) -> String? {
-        if object == "memo" {
-            return "memos/\(self.user!.uid)"
+        if object == "moment" {
+            return "moments/\(self.user!.uid)"
+        }
+        if object == "request" {
+            return "requests/\(self.user!.uid)"
         }
         return nil
     }

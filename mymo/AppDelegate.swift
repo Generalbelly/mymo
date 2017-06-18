@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/01.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.

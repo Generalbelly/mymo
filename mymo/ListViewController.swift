@@ -1,6 +1,6 @@
 //
 //  ListViewController.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/10.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.
@@ -17,28 +17,28 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         didSet {
             self.tableView.delegate = self
             self.tableView.dataSource = self
+            self.tableView.emptyDataSetSource = self
+            self.tableView.emptyDataSetDelegate = self
         }
     }
-    var memos: [Memo] = []
-    var selectedMemo: Memo?
-    var reservedMemo: [String: Any]?
+    
+    var moments: [Moment] = []
+    var selectedMoment: Moment?
+    var reservedMoment: [String: Any]?
     
     var alertController: UIAlertController! {
         didSet {
-            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { action in
-                DispatchQueue.global(qos: .userInitiated).async {
-                    FirebaseClientHelper.shared.delete(path: "\(FirebaseClientHelper.shared.getPath(object: "memo")!)/\((self.reservedMemo!["memo"] as! Memo).key!)") { result in
-                        if result {
-                            DispatchQueue.main.async {
-                                self.memos.remove(at: (self.reservedMemo!["index"] as! IndexPath).row)
-                                self.tableView.deleteRows(at: [self.reservedMemo!["index"] as! IndexPath], with: UITableViewRowAnimation.automatic)
-                            }
-                        }
+            let deleteAction = UIAlertAction(title: "Delete", style: .destructive) { [weak self] action in
+                guard let strongSelf = self else { return }
+                FirebaseClientHelper.shared.delete(path: "\(FirebaseClientHelper.shared.getPath(object: "moment")!)/\((strongSelf.reservedMoment!["moment"] as! Moment).key)") { result in
+                    if result {
+                        strongSelf.moments.remove(at: (strongSelf.reservedMoment!["index"] as! IndexPath).row)
+                        strongSelf.tableView.deleteRows(at: [strongSelf.reservedMoment!["index"] as! IndexPath], with: UITableViewRowAnimation.automatic)
                     }
                 }
-                self.dismiss(animated: true, completion: nil)
+                strongSelf.dismiss(animated: true, completion: nil)
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .default) { action in
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default) { [unowned self] action in
                 self.dismiss(animated: true, completion: nil)
             }
             self.alertController.addAction(deleteAction)
@@ -46,72 +46,66 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
     
+    var emptyStateUpdated = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.emptyDataSetSource = self
-        self.tableView.emptyDataSetDelegate = self
-
-        DispatchQueue.global(qos: .userInitiated).async {
-            FirebaseClientHelper.shared.fetch(path: FirebaseClientHelper.shared.getPath(object: "memo")!) { snapshot in
-                if snapshot != nil {
-                    DispatchQueue.main.async {
-                        let filterdMemos = self.memos.filter({ memo in memo.key == snapshot!.key })
-                        var memo: Memo!
-                        if filterdMemos.count > 0 {
-                            memo = filterdMemos.first
-                            memo.updateProps(data: snapshot!.value as! [String: Any])
-                        } else {
-                            memo = Memo(data: snapshot!.value as! [String: Any])
-                            memo.key = snapshot!.key
-                            self.memos.append(memo)
-                            self.tableView.reloadData()
-                        }
+        FirebaseClientHelper.shared.fetch(path: FirebaseClientHelper.shared.getPath(object: "moment")!) { [weak self] snapshot in
+            guard let strongSelf = self else { return }
+            if snapshot != nil {
+                var moment = strongSelf.moments.first(where:{$0.key == snapshot!.key})
+                if (moment != nil) {
+                    moment!.updateProps(data: snapshot!.value as! [String: Any])
+                    strongSelf.tableView.reloadRows(at: [IndexPath(item: strongSelf.moments.index{$0 === moment}!, section: 0)], with: .automatic)
+                } else {
+                    moment = Moment(data: snapshot!.value as! [String: Any])
+                    strongSelf.moments.append(moment!)
+                    strongSelf.tableView.insertRows(at: [IndexPath(row: strongSelf.moments.count-1, section: 0)], with: .automatic)
+                    if !strongSelf.emptyStateUpdated {
+                        strongSelf.tableView.reloadEmptyDataSet()
+                        strongSelf.emptyStateUpdated = true
                     }
                 }
             }
         }
-        
         alertController = UIAlertController(title: "Delete", message: "Once you do it, you can't undo this action", preferredStyle: .alert)
         
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if memos.count == 0 {
+        print("counting")
+        if moments.count == 0 {
             tableView.separatorStyle = .none
         } else {
             tableView.separatorStyle = .singleLine
         }
-        return memos.count
+        return moments.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCell(withIdentifier: "memo", for: indexPath as IndexPath) as! ListViewCell
-        if !memos.isEmpty {
-            let memo = memos[indexPath.row]
-            cell.thumbnail!.sd_setShowActivityIndicatorView(true)
-            cell.thumbnail!.sd_setIndicatorStyle(.gray)
-            cell.thumbnail!.sd_setImage(with: URL(string: "https://img.youtube.com/vi/\(memo.videoId)/mqdefault.jpg"))
-            cell.title!.text = memo.title
-            if memo.content.characters.count > 10 {
-                cell.content.text = memo.content.substring(to: memo.content.index(memo.content.startIndex, offsetBy: 10))
-            } else {
-                cell.content.text = memo.content
-            }
-            cell.datetime.text = memo.updatedTime
-        }
+        let cell = self.tableView.dequeueReusableCell(withIdentifier: "moment", for: indexPath as IndexPath) as! ListViewCell
+        guard !moments.isEmpty else { return cell }
+        let moment = moments[indexPath.row]
+        cell.thumbnail!.sd_setShowActivityIndicatorView(true)
+        cell.thumbnail!.sd_setIndicatorStyle(.gray)
+        cell.thumbnail!.sd_setImage(with: URL(string: "https://img.youtube.com/vi/\(moment.videoId)/mqdefault.jpg"))
+        cell.content.text = moment.content
+        cell.title!.text = moment.title
+        cell.datetime.text = moment.updatedTime
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.selectedMemo = memos[indexPath.row]
+        self.selectedMoment = moments[indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
         self.performSegue(withIdentifier: "ytVC", sender: self)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {
-        let delete = UITableViewRowAction(style: .normal, title: "Delete") { action, index in
-            self.reservedMemo = [
+        let delete = UITableViewRowAction(style: .normal, title: "Delete") { [unowned self] action, index in
+            self.reservedMoment = [
                 "index": index,
-                "memo": self.memos[index.row]
+                "moment": self.moments[index.row]
             ]
             self.present(self.alertController, animated: true)
         }
@@ -126,7 +120,7 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "ytVC" {
             if let vc = segue.destination as? YouTubeViewController {
-                vc.memo = self.selectedMemo
+                vc.moment = self.selectedMoment
             }
         }
     }
@@ -138,7 +132,7 @@ extension ListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
 //    }
 //    
     func title(forEmptyDataSet scrollView: UIScrollView!) -> NSAttributedString! {
-        let string = "Once you save a memo, it is available here."
+        let string = "Once you mark, it will be available here."
         let attributes = [
             NSFontAttributeName: UIFont.systemFont(ofSize: 18),
             NSForegroundColorAttributeName: UIColor.darkGray,

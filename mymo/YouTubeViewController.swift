@@ -1,6 +1,6 @@
 //
 //  YouTubeViewController.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/02.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.
@@ -42,10 +42,10 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             self.webView.navigationDelegate = self
             self.view.insertSubview(self.webView!, at: 0)
             var urlString = "https://www.youtube.com/"
-            if self.memo != nil {
-                urlString += "watch?v=\(memo!.videoId)"
-                if self.memo!.time != 0 {
-                    urlString += "&t=\(Util.formatTime(totalSeconds: self.memo!.time, forParam: true))"
+            if self.moment != nil {
+                urlString += "watch?v=\(self.moment!.videoId)"
+                if self.moment!.time != 0 {
+                    urlString += "&t=\(Util.formatTime(totalSeconds: self.moment!.time, forParam: true))"
                 }
             }
             let url = URL(string: urlString)
@@ -75,7 +75,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     
     var alertController: UIAlertController! {
         didSet {
-            let OKAction = UIAlertAction(title: "OK", style: .default) { action in
+            let OKAction = UIAlertAction(title: "OK", style: .default) { [unowned self] action in
                 self.dismiss(animated: true, completion: nil)
                 if self.alertController.message != "You are not watching anything." {
                     self.alertController.message = "You are not watching anything."
@@ -87,7 +87,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     
     var transcriptController: UIAlertController! {
         didSet {
-            let OKAction = UIAlertAction(title: "OK", style: .default) { action in
+            let OKAction = UIAlertAction(title: "OK", style: .default) { [unowned self] action in
                 self.dismiss(animated: true, completion: nil)
             }
             self.transcriptController.addAction(OKAction)
@@ -98,8 +98,8 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     var speedType: SpeedType = .normal
     var pausedTime = 0
     
-    // Memo
-    var memo: Memo?
+    // Moment
+    var moment: Moment?
     var textView: UITextView! {
         didSet {
             self.textView.textContainerInset = UIEdgeInsetsMake(10, 10, 10, 10)
@@ -144,7 +144,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         let userScript = WKUserScript(source: jsSourceContents, injectionTime: .atDocumentEnd, forMainFrameOnly: true)
         let userContentController = WKUserContentController()
         userContentController.addUserScript(userScript)
-        userContentController.add(self, name: "memotube")
+        userContentController.add(self, name: "mymo")
         let config = WKWebViewConfiguration()
         config.allowsInlineMediaPlayback = true
         if #available(iOS 10.0, *) {
@@ -160,7 +160,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         self.transcriptController = UIAlertController(title: "Sorry", message: "The transcript is not available.", preferredStyle: .alert)
 
 
-        self.textView = UITextView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.view.bounds.width, height: 60)))
+        self.textView = UITextView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.view.bounds.width, height: 80)))
         self.transcriptView = UITextView(frame: self.view.frame)
         let tgr = UITapGestureRecognizer(target: self, action: #selector(self.transcriptViewTapped(sender:)))
         self.transcriptView.addGestureRecognizer(tgr)
@@ -173,7 +173,9 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        Auth.auth().addStateDidChangeListener { (auth, user) in
+        super.viewWillAppear(animated)
+        Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
+            guard let strongSelf = self else { return }
             if (user != nil) {
                 FirebaseClientHelper.shared.user = user
             } else {
@@ -185,7 +187,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 ]
                 authUI?.providers = providers
                 let authViewController = authUI?.authViewController()
-                self.present(authViewController!, animated: true, completion: nil)
+                strongSelf.present(authViewController!, animated: true, completion: nil)
             }
         }
         
@@ -204,7 +206,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
 
     
     func addOptionsToMenu() {
-        self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { item in
+        self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
                 self.webView.evaluateJavaScript("pause()", completionHandler: { result, error in
                     guard error == nil else { return }
@@ -213,9 +215,9 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                     self.textView.isHidden = false
                     let time = Util.formatTime(totalSeconds: self.pausedTime, forParam: false)
                     if (self.fromListView) {
-                        self.textView.text = self.memo!.content
+                        self.textView.text = self.moment!.content
                     } else {
-                        self.textView.text = "\n\n\n\(self.webView.title ?? "") - \(time)"
+                        self.textView.text = "\n\n\(self.webView.title ?? "") - \(time)"
                         self.textView.selectedTextRange = self.textView.textRange(from: self.textView.beginningOfDocument, to: self.textView.beginningOfDocument)
                     }
                     self.textView.becomeFirstResponder()
@@ -225,14 +227,14 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 self.present(self.alertController, animated: true, completion: nil)
             }
         })
-        self.menuButton.addItem("rewind", icon: UIImage(named: "rewind"), handler: { item in
+        self.menuButton.addItem("rewind", icon: UIImage(named: "rewind"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
                 self.webView.evaluateJavaScript("rewind()", completionHandler: nil)
             } else {
                 self.present(self.alertController, animated: true, completion: nil)
             }
         })
-        self.menuButton.addItem("speed", icon: UIImage(named: "speed1"), handler: { item in
+        self.menuButton.addItem("speed", icon: UIImage(named: "speed1"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
                 if (self.speedType != .superFast) {
                     self.speedType = SpeedType(rawValue: self.speedType.rawValue + 1)!
@@ -245,11 +247,12 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 self.present(self.alertController, animated: true, completion: nil)
             }
         })
-        self.menuButton.addItem("transcript", icon: UIImage(named: "transcript"), handler: { item in
-            if self.isVideoLoaded() {
-                if !self.loadingTranscript && !self.transcriptDownloaded {
+        self.menuButton.addItem("transcript", icon: UIImage(named: "transcript"), handler: { [weak self] item in
+            guard let strongSelf = self else { return }
+            if strongSelf.isVideoLoaded() {
+                if !strongSelf.loadingTranscript && !strongSelf.transcriptDownloaded {
                     DispatchQueue.global(qos: .userInitiated).async {
-                        if let videoId = Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
+                        if let videoId = Util.getQueryStringParameter(url: strongSelf.webView.url?.absoluteString, param: "v") {
                             YouTubeClient.shared.fetchCaptionName(videoId: videoId) { name in
                                 if name != nil {
                                     YouTubeClient.shared.fetchCaption(videoId: videoId, name: name!) { result in
@@ -273,34 +276,34 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                                                     attributedString.append(NSMutableAttributedString(string:"\n"))
                                                     transcript.append(attributedString)
                                                 })
-                                                self.transcriptView.attributedText = transcript
-                                                self.transcriptView.linkTextAttributes = [
+                                                strongSelf.transcriptView.attributedText = transcript
+                                                strongSelf.transcriptView.linkTextAttributes = [
                                                     NSForegroundColorAttributeName: UIColor.blue,
                                                 ]
-                                                self.transcriptView.isHidden = false
-                                                self.transcriptDownloaded = true
+                                                strongSelf.transcriptView.isHidden = false
+                                                strongSelf.transcriptDownloaded = true
                                             } else {
-                                                self.present(self.transcriptController, animated: true, completion: nil)
+                                                strongSelf.present(strongSelf.transcriptController, animated: true, completion: nil)
                                             }
-                                            self.loadingTranscript = false
+                                            strongSelf.loadingTranscript = false
                                         }
                                     }
                                 } else {
-                                    self.present(self.transcriptController, animated: true, completion: nil)
-                                    self.loadingTranscript = false
+                                    strongSelf.present(strongSelf.transcriptController, animated: true, completion: nil)
+                                    strongSelf.loadingTranscript = false
                                 }
                             }
                         }
                     }
-                } else if self.transcriptDownloaded {
-                    self.transcriptView.isHidden = false
+                } else if strongSelf.transcriptDownloaded {
+                    strongSelf.transcriptView.isHidden = false
                 } else {
                     print("something unexpected happened")
                 }
-                self.loadingTranscript = true
-                self.menuButton.close()
+                strongSelf.loadingTranscript = true
+                strongSelf.menuButton.close()
             } else {
-                self.present(self.alertController, animated: true, completion: nil)
+                strongSelf.present(strongSelf.alertController, animated: true, completion: nil)
             }
         })
         
@@ -335,18 +338,16 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         let timestamp = ServerValue.timestamp()
         let content = self.textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if self.fromListView {
-            FirebaseClientHelper.shared.update(data: content, path: "\(FirebaseClientHelper.shared.getPath(object: "memo")!)/\(self.memo!.key!)/content")
-            FirebaseClientHelper.shared.update(data: timestamp, path: "\(FirebaseClientHelper.shared.getPath(object: "memo")!)/\(self.memo!.key!)/updatedTime")
+            FirebaseClientHelper.shared.update(data: content, path: "\(FirebaseClientHelper.shared.getPath(object: "moment")!)/\(self.moment!.key)/content")
+            FirebaseClientHelper.shared.update(data: timestamp, path: "\(FirebaseClientHelper.shared.getPath(object: "moment")!)/\(self.moment!.key)/updatedTime")
         } else {
-            let memo = [
+            let moment = [
                 "videoId": Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") ?? "",
                 "time": self.pausedTime,
                 "title": self.webView.title ?? "",
                 "content": content,
-                "addedTime": timestamp,
-                "updatedTime": timestamp,
             ] as [String : Any]
-            FirebaseClientHelper.shared.push(data: memo, path: FirebaseClientHelper.shared.getPath(object: "memo")!)
+            FirebaseClientHelper.shared.push(data: moment, path: FirebaseClientHelper.shared.getPath(object: "moment")!)
         }
         self.textView.text = ""
         self.textView.isHidden = true
@@ -357,7 +358,7 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if ((webView.url?.absoluteString.range(of: "watch")) != nil) {
-            if self.memo != nil && self.memo!.videoId == Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
+            if self.moment != nil && self.moment!.videoId == Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
                 self.fromListView = true
             } else {
                 self.fromListView = false
@@ -370,7 +371,7 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     }
 
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-//        if(message.name == "memotube") {
+//        if(message.name == "mymo") {
 //            print("JavaScript is sending a message \(message.body)")
 //        }
     }

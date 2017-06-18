@@ -1,6 +1,6 @@
 //
 //  AuthViewController.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/07.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.
@@ -35,11 +35,15 @@ class AuthViewController: FUIAuthPickerViewController {
         textView.textColor = .white
         textView.textAlignment = .center
         textView.font = UIFont.boldSystemFont(ofSize: 18)
-        textView.text = "Start marking your favorite moments of YouTube"
+        textView.text = "Mark your favorite moments of YouTube"
         
         let imageViewBackground = UIImageView(frame: CGRect(x: 0, y: 0, width: width, height: height))
         imageViewBackground.image = UIImage(named: "background")
         imageViewBackground.contentMode = .scaleAspectFill
+        
+        let cover = UIView(frame: CGRect(x: 0, y: 0, width: width, height: height))
+        cover.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        imageViewBackground.addSubview(cover)
         
         self.view.insertSubview(imageViewBackground, at: 0)
         self.view.addSubview(label)

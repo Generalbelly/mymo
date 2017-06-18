@@ -1,4 +1,4 @@
-window.__MEMOTUBE = {
+window.__mymo = {
   rate: 1
 };
 
@@ -9,18 +9,18 @@ function getVideo() {
 }
 
 function playListener() {
-  video.playbackRate = window.__MEMOTUBE.rate;
+  video.playbackRate = window.__mymo.rate;
 }
 
 function loadVideo() {
   video = getVideo();
-  video.playbackRate = window.__MEMOTUBE.rate;
+  video.playbackRate = window.__mymo.rate;
   video.removeEventListener('play', playListener);
   video.addEventListener('play', playListener);
 }
 
 function changeSpeedRateTo(rate) {
-  window.__MEMOTUBE.rate = rate;
+  window.__mymo.rate = rate;
   loadVideo();
 }
 

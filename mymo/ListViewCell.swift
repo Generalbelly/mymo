@@ -1,6 +1,6 @@
 //
 //  ListViewCell.swift
-//  MemoTube
+//  mymo
 //
 //  Created by ShimmenNobuyoshi on 2017/06/10.
 //  Copyright © 2017年 ShimmenNobuyoshi. All rights reserved.
