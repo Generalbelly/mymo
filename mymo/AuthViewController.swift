@@ -24,13 +24,29 @@ class AuthViewController: FUIAuthPickerViewController {
         let width = UIScreen.main.bounds.size.width
         let height = UIScreen.main.bounds.size.height
         
-        let label = UILabel(frame: CGRect(x: 0, y: 180, width: width, height: 50))
+        let label = UILabel()
+        let textView = UITextView()
+        
+        print(UIDevice.current.userInterfaceIdiom)
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            //iPhone
+            print("iPhone!")
+            label.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 100, width: width, height: 50)
+            textView.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 50, width: width, height: 50)
+        } else {
+            //iPad
+            print("iPad!")
+            // In order not to overlap signinView(Google, Facebook, Email thing),
+            // I use view's height for figuring y, and 150 is the textView's height and extra margin.
+            label.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 200, width: width, height: 50)
+            textView.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 150, width: width, height: 50)
+        }
+
         label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont.boldSystemFont(ofSize: 36)
         label.text = "mymo"
         
-        let textView = UITextView(frame: CGRect(x: 5, y: 250, width: width - 5, height: 100))
         textView.backgroundColor = .clear
         textView.textColor = .white
         textView.textAlignment = .center

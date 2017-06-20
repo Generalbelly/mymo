@@ -73,7 +73,6 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("counting")
         if moments.count == 0 {
             tableView.separatorStyle = .none
         } else {
