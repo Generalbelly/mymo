@@ -8,7 +8,7 @@
 
 import Foundation
 
-class Util {
+struct Util {
     
     static func formatTime(totalSeconds: Int, forParam: Bool) -> String {
         let seconds: Int = totalSeconds % 60
@@ -65,3 +65,4 @@ class Util {
         }
     }
 }
+

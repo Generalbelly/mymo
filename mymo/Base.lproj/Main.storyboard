@@ -234,7 +234,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r7e-eS-Qbb" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Moments" image="list" id="qO0-iX-pYO"/>
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="2JZ-6U-zXl">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="2JZ-6U-zXl">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -252,9 +252,7 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KMK-UW-t78" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="375" height="667"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="HhR-Qv-NsO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="HhR-Qv-NsO">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

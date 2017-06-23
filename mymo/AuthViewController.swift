@@ -28,14 +28,12 @@ class AuthViewController: FUIAuthPickerViewController {
         let textView = UITextView()
         
         print(UIDevice.current.userInterfaceIdiom)
-        if UIDevice.current.userInterfaceIdiom == .phone {
+        if UIDevice.current.userInterfaceIdiom == .phone && UIDevice.current.model.hasPrefix("iPhone") {
             //iPhone
-            print("iPhone!")
             label.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 100, width: width, height: 50)
             textView.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 50, width: width, height: 50)
         } else {
             //iPad
-            print("iPad!")
             // In order not to overlap signinView(Google, Facebook, Email thing),
             // I use view's height for figuring y, and 150 is the textView's height and extra margin.
             label.frame = CGRect(x: 0, y: (self.view.bounds.size.height / 2) - 200, width: width, height: 50)

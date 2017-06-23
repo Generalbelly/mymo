@@ -25,7 +25,7 @@ enum MovingDirection {
 }
 
 class YouTubeViewController: UIViewController, WKUIDelegate {
-
+    
     var fromListView = false
     
     @IBOutlet weak var menuButton: Floaty! {
@@ -62,7 +62,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     @IBAction func forwardButtonTapped(_ sender: Any) {
         self.move(direction: .forward)
     }
-
+    
     @IBOutlet weak var backButton: UIButton! {
         didSet {
             self.backButton.clipsToBounds = true
@@ -93,7 +93,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             self.transcriptController.addAction(OKAction)
         }
     }
-
+    
     // Video property
     var speedType: SpeedType = .normal
     var pausedTime = 0
@@ -118,7 +118,6 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             self.textView.inputAccessoryView = keyboardToolbar
         }
     }
-    var textViewPositionAdjusted = false
     
     // Script
     var transcriptView: UITextView! {
@@ -153,13 +152,12 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             config.requiresUserActionForMediaPlayback = true
         }
         config.userContentController = userContentController
-        self.webView = WKWebView(frame: self.view.bounds, configuration: config)
+        self.webView = WKWebView(frame: CGRect(x: 0, y: UIApplication.shared.statusBarFrame.height, width: self.view.frame.width, height: self.view.frame.height - UIApplication.shared.statusBarFrame.height), configuration: config)
         
-
         self.alertController = UIAlertController(title: "Oops", message: "You are not watching anything.", preferredStyle: .alert)
         self.transcriptController = UIAlertController(title: "Sorry", message: "The transcript is not available.", preferredStyle: .alert)
-
-
+        
+        
         self.textView = UITextView(frame: CGRect(origin: CGPoint.zero, size: CGSize(width: self.view.bounds.width, height: 80)))
         self.transcriptView = UITextView(frame: self.view.frame)
         let tgr = UITapGestureRecognizer(target: self, action: #selector(self.transcriptViewTapped(sender:)))
@@ -174,9 +172,13 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
         Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
             guard let strongSelf = self else { return }
             if (user != nil) {
+                strongSelf.menuButton.open()
+                strongSelf.menuButton.close()
                 FirebaseClientHelper.shared.user = user
             } else {
                 let authUI = FUIAuth.defaultAuthUI()
@@ -184,15 +186,18 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 let providers: [FUIAuthProvider] = [
                     FUIGoogleAuth(),
                     FUIFacebookAuth(),
-                ]
+                    ]
                 authUI?.providers = providers
                 let authViewController = authUI?.authViewController()
                 strongSelf.present(authViewController!, animated: true, completion: nil)
             }
         }
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
     
     func move(direction: MovingDirection) {
@@ -203,7 +208,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             self.webView.goForward()
         }
     }
-
+    
     
     func addOptionsToMenu() {
         self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { [unowned self] item in
@@ -212,6 +217,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                     guard error == nil else { return }
                     self.pausedTime = result as! Int
                     self.menuButton.close()
+                    self.menuButton.frame.offsetBy(dx: 0, dy: 0)
                     self.textView.isHidden = false
                     let time = Util.formatTime(totalSeconds: self.pausedTime, forParam: false)
                     if (self.fromListView) {
@@ -269,7 +275,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                                                     let attributes = [
                                                         NSFontAttributeName: UIFont.systemFont(ofSize: 18),
                                                         NSForegroundColorAttributeName: UIColor.white,
-                                                    ]
+                                                        ]
                                                     
                                                     let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
                                                     attributedString.addAttribute(NSLinkAttributeName, value: time, range: NSMakeRange((sentence.characters.count + 3), formattedTime.characters.count))
@@ -312,20 +318,16 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     func isVideoLoaded() -> Bool {
         return !self.webView.isLoading && ((self.webView.url!.absoluteString.range(of: "watch") != nil))
     }
-
+    
     func keyboardWillShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
-            if !textViewPositionAdjusted {
-                let keyboardHeight = keyboardSize.height
-                self.textView.frame = self.textView.frame.offsetBy(dx: 0, dy: self.view.frame.size.height - (keyboardHeight + self.textView.frame.size.height))
-                textViewPositionAdjusted = true
-            }
+            let keyboardHeight = keyboardSize.height
+            self.textView.frame = self.textView.frame.offsetBy(dx: 0, dy: self.view.frame.size.height - (keyboardHeight + self.textView.frame.size.height))
         }
     }
     
     func keyboardWillHide(notification: NSNotification) {
-        self.menuButton.open()
-        self.menuButton.close()
+        self.textView.frame = CGRect(origin: CGPoint.zero, size: self.textView.frame.size)
     }
     
     func keyboardCancalTapped() {
@@ -346,7 +348,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 "time": self.pausedTime,
                 "title": self.webView.title ?? "",
                 "content": content,
-            ] as [String : Any]
+                ] as [String : Any]
             FirebaseClientHelper.shared.push(data: moment, path: FirebaseClientHelper.shared.getPath(object: "moment")!)
         }
         self.textView.text = ""
@@ -355,7 +357,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
 }
 
 extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
-
+    
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if ((webView.url?.absoluteString.range(of: "watch")) != nil) {
             if self.moment != nil && self.moment!.videoId == Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
@@ -369,13 +371,13 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
         }
         decisionHandler(.allow)
     }
-
+    
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-//        if(message.name == "mymo") {
-//            print("JavaScript is sending a message \(message.body)")
-//        }
+        //        if(message.name == "mymo") {
+        //            print("JavaScript is sending a message \(message.body)")
+        //        }
     }
-
+    
 }
 
 extension YouTubeViewController: FUIAuthDelegate {
@@ -393,5 +395,5 @@ extension YouTubeViewController: UITextViewDelegate {
         self.webView.evaluateJavaScript("seekTo(\(URL.absoluteString))", completionHandler: nil)
         return false
     }
-
+    
 }
