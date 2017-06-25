@@ -40,7 +40,7 @@ struct Util {
     }
     
     static func convertTimeToDate(timeStamp: TimeInterval) -> String {
-        let date = NSDate(timeIntervalSince1970: timeStamp/1000)
+        let date = NSDate(timeIntervalSince1970: timeStamp)
         let dateFormatter = DateFormatter()
         dateFormatter.timeStyle = DateFormatter.Style.medium
         dateFormatter.timeZone = NSTimeZone.local

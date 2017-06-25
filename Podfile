@@ -6,12 +6,9 @@ target 'mymo' do
   use_frameworks!
 
   # Pods for mymo
+    pod 'RealmSwift'
     pod 'Firebase/Core'
-    pod 'Firebase/Auth'
     pod 'Firebase/Database'
-    pod 'FirebaseUI/Auth', '~> 4.0'
-    pod 'FirebaseUI/Facebook', '~> 4.0'
-    pod 'FirebaseUI/Google', '~> 4.0'
     pod 'Floaty', '~> 3.0.0'
     pod 'Alamofire', '~> 4.4'
     pod 'SWXMLHash', '~> 4.0.0'

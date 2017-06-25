@@ -11,10 +11,7 @@ import UIKit
 import WebKit
 import Floaty
 import JavaScriptCore
-import FirebaseAuthUI
-import FirebaseGoogleAuthUI
-import FirebaseFacebookAuthUI
-import Firebase
+import RealmSwift
 
 enum SpeedType: Int {
     case slow, normal, fast, veryFast, superFast
@@ -213,21 +210,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
                 self.menuButton.close()
-                if Auth.auth().currentUser != nil {
-                    // User is signed in.
-                    self.startMarking()
-                } else {
-                    // User is not signed in.
-                    let authUI = FUIAuth.defaultAuthUI()
-                    authUI?.delegate = self
-                    let providers: [FUIAuthProvider] = [
-                        FUIGoogleAuth(),
-                        FUIFacebookAuth(),
-                        ]
-                    authUI?.providers = providers
-                    let authViewController = authUI?.authViewController()
-                    self.present(authViewController!, animated: true, completion: nil)
-                }
+                self.startMarking()
             } else {
                 self.alertController.message = "Please select a video to start marking."
                 self.present(self.alertController, animated: true, completion: nil)
@@ -323,6 +306,12 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             let keyboardHeight = keyboardSize.height
             self.textView.frame = self.textView.frame.offsetBy(dx: 0, dy: self.view.frame.size.height - (keyboardHeight + self.textView.frame.size.height))
         }
+        if self.fromListView {
+            if let youtubVC = self.parent?.tabBarController?.viewControllers?[0] as? YouTubeViewController {
+                youtubVC.menuButton.open()
+                youtubVC.menuButton.close()
+            }
+        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -336,19 +325,26 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     
     func keyboardDoneTapped() {
         self.view.endEditing(true)
-        let timestamp = ServerValue.timestamp()
         let content = self.textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let timeStamp = NSDate().timeIntervalSince1970
+        let realm = try! Realm()
         if self.fromListView {
-            FirebaseClientHelper.shared.update(data: content, path: "\(FirebaseClientHelper.shared.getPath(object: "moment")!)/\(self.moment!.key)/content")
-            FirebaseClientHelper.shared.update(data: timestamp, path: "\(FirebaseClientHelper.shared.getPath(object: "moment")!)/\(self.moment!.key)/updatedTime")
+            try! realm.write {
+                self.moment?.content = content
+                self.moment?.updatedTime = timeStamp
+            }
         } else {
-            let moment = [
+            let data = [
                 "videoId": Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") ?? "",
                 "time": self.pausedTime,
                 "title": self.webView.title ?? "",
                 "content": content,
-                ] as [String : Any]
-            FirebaseClientHelper.shared.push(data: moment, path: FirebaseClientHelper.shared.getPath(object: "moment")!)
+                "addedTime": timeStamp
+            ] as [String : Any]
+            let moment = Moment(value: data)
+            try! realm.write {
+                realm.add(moment)
+            }
         }
         self.textView.text = ""
         self.textView.isHidden = true
@@ -379,22 +375,8 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     
 }
 
-extension YouTubeViewController: FUIAuthDelegate {
-    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
-        // Here is where we add code after logging in
-        if user != nil {
-            self.menuButton.open()
-            self.menuButton.close()
-            self.startMarking()
-        }
-    }
-    
-    func authPickerViewController(forAuthUI authUI: FUIAuth) -> FUIAuthPickerViewController {
-        return AuthViewController(authUI: authUI)
-    }
-}
-
 extension YouTubeViewController: UITextViewDelegate {
+
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         self.transcriptView.isHidden = true
         self.webView.evaluateJavaScript("seekTo(\(URL.absoluteString))", completionHandler: nil)

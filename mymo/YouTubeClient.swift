@@ -22,7 +22,7 @@ final class YouTubeClient {
         let params = [
             "type": "list",
             "v": videoId,
-            ]
+        ]
         self.request(parameters: params) { data in
             if data != nil {
                 let xml = SWXMLHash.lazy(data!)

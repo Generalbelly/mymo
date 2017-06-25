@@ -7,43 +7,15 @@
 //
 
 import Foundation
+import RealmSwift
 
-class Moment {
+class Moment: Object {
 
-    var videoId: String
-    var time: Int
-    var title: String
-    var content: String
-    var addedTime: String
-    var updatedTime: String
-    var key: String
-    
-    init(data: [String: Any]) {
-        self.videoId = data["videoId"] as! String
-        self.time = data["time"] as! Int
-        self.title = data["title"] as! String
-        self.content = data["content"] as! String
-        self.addedTime = Util.convertTimeToDate(timeStamp: data["addedTime"] as! TimeInterval)
-        self.updatedTime = Util.convertTimeToDate(timeStamp: data["updatedTime"] as! TimeInterval)
-        self.key = data["key"] as! String
-    }
+    dynamic var videoId = ""
+    dynamic var time = 0
+    dynamic var title = ""
+    dynamic var content = ""
+    dynamic var addedTime: Double = 0
+    dynamic var updatedTime: Double = 0
 
-    func updateProps(data: [String: Any]) {
-//        self.time = data["time"] as! Int
-//        self.title = data["title"] as! String
-        self.content = data["content"] as! String
-        self.updatedTime = Util.convertTimeToDate(timeStamp: data["updatedTime"] as! TimeInterval)
-    }
-    
-    func toDict() -> [String: Any?] {
-        return [
-            "videoId": self.videoId,
-            "time": self.time,
-            "title": self.title,
-            "content": self.content,
-            "addedTime": self.addedTime,
-            "updatedTime": self.updatedTime,
-            "key": self.key,
-        ]
-    }
 }
