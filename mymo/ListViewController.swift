@@ -10,6 +10,9 @@ import Foundation
 import UIKit
 import SDWebImage
 import DZNEmptyDataSet
+import FirebaseAuthUI
+import FirebaseGoogleAuthUI
+import FirebaseFacebookAuthUI
 
 class ListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -48,28 +51,43 @@ class ListViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var emptyStateUpdated = false
     
+    var handle: AuthStateDidChangeListenerHandle?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        FirebaseClientHelper.shared.fetch(path: FirebaseClientHelper.shared.getPath(object: "moment")!) { [weak self] snapshot in
-            guard let strongSelf = self else { return }
-            if snapshot != nil {
-                var moment = strongSelf.moments.first(where:{$0.key == snapshot!.key})
-                if (moment != nil) {
-                    moment!.updateProps(data: snapshot!.value as! [String: Any])
-                    strongSelf.tableView.reloadRows(at: [IndexPath(item: strongSelf.moments.index{$0 === moment}!, section: 0)], with: .automatic)
-                } else {
-                    moment = Moment(data: snapshot!.value as! [String: Any])
-                    strongSelf.moments.append(moment!)
-                    strongSelf.tableView.insertRows(at: [IndexPath(row: strongSelf.moments.count-1, section: 0)], with: .automatic)
-                    if !strongSelf.emptyStateUpdated {
-                        strongSelf.tableView.reloadEmptyDataSet()
-                        strongSelf.emptyStateUpdated = true
+        alertController = UIAlertController(title: "Delete", message: "Once you do it, you can't undo this action", preferredStyle: .alert)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.handle = Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
+            if (user != nil) {
+                FirebaseClientHelper.shared.user = user
+                FirebaseClientHelper.shared.fetch(path: FirebaseClientHelper.shared.getPath(object: "moment")!) { [weak self] snapshot in
+                    guard let strongSelf = self else { return }
+                    if snapshot != nil {
+                        var moment = strongSelf.moments.first(where:{$0.key == snapshot!.key})
+                        if (moment != nil) {
+                            moment!.updateProps(data: snapshot!.value as! [String: Any])
+                            strongSelf.tableView.reloadRows(at: [IndexPath(item: strongSelf.moments.index{$0 === moment}!, section: 0)], with: .automatic)
+                        } else {
+                            moment = Moment(data: snapshot!.value as! [String: Any])
+                            strongSelf.moments.append(moment!)
+                            strongSelf.tableView.insertRows(at: [IndexPath(row: strongSelf.moments.count-1, section: 0)], with: .automatic)
+                            if !strongSelf.emptyStateUpdated {
+                                strongSelf.tableView.reloadEmptyDataSet()
+                                strongSelf.emptyStateUpdated = true
+                            }
+                        }
                     }
                 }
             }
         }
-        alertController = UIAlertController(title: "Delete", message: "Once you do it, you can't undo this action", preferredStyle: .alert)
-        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        Auth.auth().removeStateDidChangeListener(self.handle!)
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -137,5 +155,16 @@ extension ListViewController: DZNEmptyDataSetSource, DZNEmptyDataSetDelegate {
             NSForegroundColorAttributeName: UIColor.darkGray,
         ]
         return NSAttributedString(string: string, attributes: attributes)
+    }
+}
+
+extension ListViewController: FUIAuthDelegate {
+
+    func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
+        // Here is where we add code after logging in
+    }
+
+    func authPickerViewController(forAuthUI authUI: FUIAuth) -> FUIAuthPickerViewController {
+        return AuthViewController(authUI: authUI)
     }
 }

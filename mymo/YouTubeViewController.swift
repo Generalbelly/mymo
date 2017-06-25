@@ -174,24 +174,6 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         super.viewWillAppear(animated)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
-        Auth.auth().addStateDidChangeListener { [weak self] (auth, user) in
-            guard let strongSelf = self else { return }
-            if (user != nil) {
-                strongSelf.menuButton.open()
-                strongSelf.menuButton.close()
-                FirebaseClientHelper.shared.user = user
-            } else {
-                let authUI = FUIAuth.defaultAuthUI()
-                authUI?.delegate = self
-                let providers: [FUIAuthProvider] = [
-                    FUIGoogleAuth(),
-                    FUIFacebookAuth(),
-                    ]
-                authUI?.providers = providers
-                let authViewController = authUI?.authViewController()
-                strongSelf.present(authViewController!, animated: true, completion: nil)
-            }
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -199,7 +181,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
-    
+
     func move(direction: MovingDirection) {
         guard self.webView != nil else { return }
         if direction == .back && self.webView.canGoBack {
@@ -209,25 +191,43 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         }
     }
     
+    func startMarking() {
+        self.webView.evaluateJavaScript("pause()", completionHandler: { result, error in
+            guard error == nil else { return }
+            self.pausedTime = result as! Int
+            self.menuButton.close()
+            self.menuButton.frame.offsetBy(dx: 0, dy: 0)
+            self.textView.isHidden = false
+            let time = Util.formatTime(totalSeconds: self.pausedTime, forParam: false)
+            if (self.fromListView) {
+                self.textView.text = self.moment!.content
+            } else {
+                self.textView.text = "\n\n\(self.webView.title ?? "") - \(time)"
+                self.textView.selectedTextRange = self.textView.textRange(from: self.textView.beginningOfDocument, to: self.textView.beginningOfDocument)
+            }
+            self.textView.becomeFirstResponder()
+        })
+    }
     
     func addOptionsToMenu() {
         self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
-                self.webView.evaluateJavaScript("pause()", completionHandler: { result, error in
-                    guard error == nil else { return }
-                    self.pausedTime = result as! Int
-                    self.menuButton.close()
-                    self.menuButton.frame.offsetBy(dx: 0, dy: 0)
-                    self.textView.isHidden = false
-                    let time = Util.formatTime(totalSeconds: self.pausedTime, forParam: false)
-                    if (self.fromListView) {
-                        self.textView.text = self.moment!.content
-                    } else {
-                        self.textView.text = "\n\n\(self.webView.title ?? "") - \(time)"
-                        self.textView.selectedTextRange = self.textView.textRange(from: self.textView.beginningOfDocument, to: self.textView.beginningOfDocument)
-                    }
-                    self.textView.becomeFirstResponder()
-                })
+                self.menuButton.close()
+                if Auth.auth().currentUser != nil {
+                    // User is signed in.
+                    self.startMarking()
+                } else {
+                    // User is not signed in.
+                    let authUI = FUIAuth.defaultAuthUI()
+                    authUI?.delegate = self
+                    let providers: [FUIAuthProvider] = [
+                        FUIGoogleAuth(),
+                        FUIFacebookAuth(),
+                        ]
+                    authUI?.providers = providers
+                    let authViewController = authUI?.authViewController()
+                    self.present(authViewController!, animated: true, completion: nil)
+                }
             } else {
                 self.alertController.message = "Please select a video to start marking."
                 self.present(self.alertController, animated: true, completion: nil)
@@ -312,7 +312,6 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
                 strongSelf.present(strongSelf.alertController, animated: true, completion: nil)
             }
         })
-        
     }
     
     func isVideoLoaded() -> Bool {
@@ -383,7 +382,13 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
 extension YouTubeViewController: FUIAuthDelegate {
     func authUI(_ authUI: FUIAuth, didSignInWith user: User?, error: Error?) {
         // Here is where we add code after logging in
+        if user != nil {
+            self.menuButton.open()
+            self.menuButton.close()
+            self.startMarking()
+        }
     }
+    
     func authPickerViewController(forAuthUI authUI: FUIAuth) -> FUIAuthPickerViewController {
         return AuthViewController(authUI: authUI)
     }

@@ -66,8 +66,8 @@ class FirebaseClientHelper {
         if object == "moment" {
             return "moments/\(self.user!.uid)"
         }
-        if object == "request" {
-            return "requests/\(self.user!.uid)"
+        if object == "feedback" {
+            return "feedback"
         }
         return nil
     }

@@ -29,7 +29,6 @@ class Moment {
     }
 
     func updateProps(data: [String: Any]) {
-        print("updating")
 //        self.time = data["time"] as! Int
 //        self.title = data["title"] as! String
         self.content = data["content"] as! String

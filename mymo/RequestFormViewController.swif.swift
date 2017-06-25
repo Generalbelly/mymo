@@ -14,18 +14,18 @@ class RequestFormViewController: FormViewController {
         didSet {
             let OKAction = UIAlertAction(title: "Done", style: .default) { [unowned self] action in
                 self.dismiss(animated: true, completion: nil)
+                if let row = self.form.rowBy(tag: "message") as? TextAreaRow {
+                    row.value = ""
+                    row.updateCell()
+                }
             }
             self.alertController.addAction(OKAction)
         }
     }
     
-    @IBAction func cancelTapped(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "Comments and Questions"
+        self.title = "Leave feedback"
         form +++ Section(header: "", footer: "If you have any comments or questions, please send me a message.")
             +++ Section()
             <<< TextAreaRow() { row in
@@ -42,9 +42,18 @@ class RequestFormViewController: FormViewController {
                 let request = [
                     "message": value,
                 ]
-                FirebaseClientHelper.shared.push(data: request, path: FirebaseClientHelper.shared.getPath(object: "request")!)
+                FirebaseClientHelper.shared.push(data: request, path: FirebaseClientHelper.shared.getPath(object: "feedback")!)
                 strongSelf.present(strongSelf.alertController, animated: true)
             }
         self.alertController = UIAlertController(title: "Thanks!", message: "Your feedback really helps.", preferredStyle: .alert)
     }
+    
+    override func keyboardWillShow(_ notification: Notification) {
+        super.keyboardWillShow(notification)
+        if let youtubVC = self.parent?.tabBarController?.viewControllers?[0] as? YouTubeViewController {
+            youtubVC.menuButton.open()
+            youtubVC.menuButton.close()
+        }
+    }
 }
+

@@ -62,11 +62,10 @@ class AuthViewController: FUIAuthPickerViewController {
         self.view.insertSubview(imageViewBackground, at: 0)
         self.view.addSubview(label)
         self.view.addSubview(textView)
-        
-        self.navigationItem.leftBarButtonItem = nil
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController?.isNavigationBarHidden = false
     }
 }
