@@ -66,8 +66,8 @@ class ListViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ytVC" {
-            if let vc = segue.destination as? YouTubeViewController {
+        if segue.identifier == "fullScreen2" {
+            if let vc = segue.destination as? FullsizeViewController {
                 vc.moment = self.selectedMoment
             }
         }
@@ -102,7 +102,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.selectedMoment = moments[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "ytVC", sender: self)
+        self.performSegue(withIdentifier: "fullScreen2", sender: self)
     }
     
     func tableView(_ tableView: UITableView, editActionsForRowAt: IndexPath) -> [UITableViewRowAction]? {

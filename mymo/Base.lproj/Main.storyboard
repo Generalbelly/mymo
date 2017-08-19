@@ -77,11 +77,33 @@
                         <outlet property="backButton" destination="aqZ-T9-RKR" id="q1j-GZ-0LL"/>
                         <outlet property="forwardButton" destination="39j-wx-Nve" id="yz4-BO-AYc"/>
                         <outlet property="menuButton" destination="zAs-qm-Jey" id="kuX-hQ-WPu"/>
+                        <segue destination="Ylt-Jf-TY9" kind="presentation" identifier="fullScreen" id="3lr-63-8XE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cxJ-X7-MjN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1884" y="133.5832083958021"/>
+        </scene>
+        <!--Fullsize View Controller-->
+        <scene sceneID="vB0-qz-nEg">
+            <objects>
+                <viewController id="Ylt-Jf-TY9" customClass="FullsizeViewController" customModule="mymo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="8Ez-7H-9qx"/>
+                        <viewControllerLayoutGuide type="bottom" id="HAE-MV-TAd"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3tI-al-aTs" customClass="UIWebView">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="3tI-al-aTs" id="pa3-L4-Oju"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N2a-Et-zeA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2648.8000000000002" y="133.5832083958021"/>
         </scene>
         <!--List View Controller-->
         <scene sceneID="94b-jp-7Gn">
@@ -103,7 +125,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="112"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PZd-uY-Pzf" id="LHK-sD-EJR">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="111"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="111.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zYs-2T-Gmc">
@@ -172,12 +194,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Wce-wR-A9W" id="jXk-Od-IUO"/>
-                        <segue destination="tQg-Fh-5Ca" kind="show" identifier="ytVC" id="Hyp-Pl-5oi"/>
+                        <segue destination="Ylt-Jf-TY9" kind="presentation" identifier="fullScreen2" id="Xcr-zW-gdh"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="47S-gZ-z9q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2601" y="868"/>
+            <point key="canvasLocation" x="2649" y="868"/>
         </scene>
         <!--Request Form View Controller-->
         <scene sceneID="O48-cd-YAw">
@@ -197,6 +219,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bdm-MX-dkC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3358" y="1575"/>
+        </scene>
+        <!--Faq View Controller-->
+        <scene sceneID="7kP-re-R7C">
+            <objects>
+                <viewController id="Nec-kk-OMk" customClass="FaqViewController" customModule="mymo" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="x9J-fx-zKH"/>
+                        <viewControllerLayoutGuide type="bottom" id="i32-gw-SY3"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="p5U-oR-X8v">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i4e-ds-dpN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3358" y="2257"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="ly0-hq-BMj">
@@ -257,11 +297,11 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="u3q-aV-MFL" id="PwB-ww-df5">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Rs6-vl-3Na">
-                                                    <rect key="frame" x="15" y="0.0" width="345" height="43"/>
+                                                    <rect key="frame" x="15" y="0.0" width="345" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -285,17 +325,18 @@
                     <connections>
                         <outlet property="tableView" destination="CNN-Ru-NxP" id="Mdc-uA-1uf"/>
                         <segue destination="dYZ-KU-bZ4" kind="show" identifier="rfVC" id="RS5-Yt-6cI"/>
+                        <segue destination="Nec-kk-OMk" kind="show" identifier="faq" id="JT1-2W-0aV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O1f-Su-sed" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2600.8000000000002" y="1574.6626686656673"/>
         </scene>
-        <!--Item-->
+        <!--Setting-->
         <scene sceneID="oQW-zz-7xl">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="HhL-VO-vQv" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Item" image="setting" id="gLh-r8-AXB"/>
+                    <tabBarItem key="tabBarItem" title="Setting" image="setting" id="gLh-r8-AXB"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="cBp-HZ-sUG">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
@@ -319,6 +360,6 @@
         <image name="youtube" width="24" height="18"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="Hyp-Pl-5oi"/>
+        <segue reference="Xcr-zW-gdh"/>
     </inferredMetricsTieBreakers>
 </document>

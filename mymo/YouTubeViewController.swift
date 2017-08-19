@@ -23,8 +23,6 @@ enum MovingDirection {
 
 class YouTubeViewController: UIViewController, WKUIDelegate {
     
-    var fromListView = false
-    
     @IBOutlet weak var menuButton: Floaty! {
         didSet {
             self.addOptionsToMenu()
@@ -94,6 +92,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     // Video property
     var speedType: SpeedType = .normal
     var pausedTime = 0
+    var fullsizeViewStartingTime = 0
     
     // Moment
     var moment: Moment?
@@ -116,7 +115,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         }
     }
     
-    // Script
+    // Transcript
     var transcriptView: UITextView! {
         didSet {
             self.transcriptView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
@@ -188,7 +187,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         }
     }
     
-    func startMarking() {
+    func mark() {
         self.webView.evaluateJavaScript("pause()", completionHandler: { result, error in
             guard error == nil else { return }
             self.pausedTime = result as! Int
@@ -196,12 +195,8 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             self.menuButton.frame.offsetBy(dx: 0, dy: 0)
             self.textView.isHidden = false
             let time = Util.formatTime(totalSeconds: self.pausedTime, forParam: false)
-            if (self.fromListView) {
-                self.textView.text = self.moment!.content
-            } else {
-                self.textView.text = "\n\n\(self.webView.title ?? "") - \(time)"
-                self.textView.selectedTextRange = self.textView.textRange(from: self.textView.beginningOfDocument, to: self.textView.beginningOfDocument)
-            }
+            self.textView.text = "\n\n\(self.webView.title ?? "") - \(time)"
+            self.textView.selectedTextRange = self.textView.textRange(from: self.textView.beginningOfDocument, to: self.textView.beginningOfDocument)
             self.textView.becomeFirstResponder()
         })
     }
@@ -210,7 +205,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         self.menuButton.addItem("mark", icon: UIImage(named: "bookmark"), handler: { [unowned self] item in
             if self.isVideoLoaded() {
                 self.menuButton.close()
-                self.startMarking()
+                self.mark()
             } else {
                 self.alertController.message = "Please select a video to start marking."
                 self.present(self.alertController, animated: true, completion: nil)
@@ -306,12 +301,6 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
             let keyboardHeight = keyboardSize.height
             self.textView.frame = self.textView.frame.offsetBy(dx: 0, dy: self.view.frame.size.height - (keyboardHeight + self.textView.frame.size.height))
         }
-        if self.fromListView {
-            if let youtubVC = self.parent?.tabBarController?.viewControllers?[0] as? YouTubeViewController {
-                youtubVC.menuButton.open()
-                youtubVC.menuButton.close()
-            }
-        }
     }
     
     func keyboardWillHide(notification: NSNotification) {
@@ -328,38 +317,36 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
         let content = self.textView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         let timeStamp = NSDate().timeIntervalSince1970
         let realm = try! Realm()
-        if self.fromListView {
-            try! realm.write {
-                self.moment?.content = content
-                self.moment?.updatedTime = timeStamp
-            }
-        } else {
-            let data = [
-                "videoId": Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") ?? "",
-                "time": self.pausedTime,
-                "title": self.webView.title ?? "",
-                "content": content,
-                "addedTime": timeStamp
-            ] as [String : Any]
-            let moment = Moment(value: data)
-            try! realm.write {
-                realm.add(moment)
-            }
+        let data = [
+            "videoId": Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") ?? "",
+            "time": self.pausedTime,
+            "title": self.webView.title ?? "",
+            "content": content,
+            "addedTime": timeStamp
+        ] as [String : Any]
+        let moment = Moment(value: data)
+        try! realm.write {
+            realm.add(moment)
         }
         self.textView.text = ""
         self.textView.isHidden = true
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let fvc = segue.destination as? FullsizeViewController,
+           let videoId = Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
+            fvc.videoId = videoId
+            fvc.videoTitle = self.webView.title ?? ""
+            fvc.startingTime = self.fullsizeViewStartingTime
+        }
+    }
+
 }
 
 extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         if ((webView.url?.absoluteString.range(of: "watch")) != nil) {
-            if self.moment != nil && self.moment!.videoId == Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
-                self.fromListView = true
-            } else {
-                self.fromListView = false
-            }
             self.transcriptDownloaded = false
             self.transcriptView.text = ""
             self.webView.evaluateJavaScript("applyInlinePlay()", completionHandler: nil)
@@ -368,9 +355,12 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        //        if(message.name == "mymo") {
-        //            print("JavaScript is sending a message \(message.body)")
-        //        }
+        if message.name == "mymo" {
+//            if let message = message.body as? String, message.contains("fullScreen") {
+            self.fullsizeViewStartingTime = message.body as! Int
+            self.performSegue(withIdentifier: "fullScreen", sender: self)
+//            }
+        }
     }
     
 }

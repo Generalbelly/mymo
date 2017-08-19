@@ -26,8 +26,7 @@ class RequestFormViewController: FormViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Leave feedback"
-        form +++ Section(header: "", footer: "If you have any comments or questions, please send me a message.")
-            +++ Section()
+        form +++ Section(header: "If you have any comments or questions, please send me a message.", footer: "")
             <<< TextAreaRow() { row in
                 row.tag = "message"
                 row.placeholder = "Enter text here"

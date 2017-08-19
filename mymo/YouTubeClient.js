@@ -5,11 +5,20 @@ window.__mymo = {
 var video = null;
 
 function getVideo() {
-  return document.getElementsByTagName('video')[0];
+  video = document.getElementsByTagName('video')[0];
+  video.removeEventListener('webkitbeginfullscreen', onVideoBeginsFullScreen);
+  video.addEventListener('webkitbeginfullscreen', onVideoBeginsFullScreen);
+  return video;
 }
 
 function playListener() {
   video.playbackRate = window.__mymo.rate;
+}
+
+function onVideoBeginsFullScreen() {
+  video.webkitExitFullscreen();
+  video.pause();
+  webkit.messageHandlers.mymo.postMessage(video.currentTime);
 }
 
 function loadVideo() {

@@ -22,11 +22,13 @@
 		00AD04041EE98D1F00F895BE /* YouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00AD04031EE98D1F00F895BE /* YouTubeClient.swift */; };
 		00B0E7061EEC1E37007F7BD4 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */; };
 		00B0E7081EEC213F007F7BD4 /* ListViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00B0E7071EEC213F007F7BD4 /* ListViewCell.swift */; };
+		00E14B501F407B7B00CCE1B7 /* FullsizeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E14B4F1F407B7B00CCE1B7 /* FullsizeViewController.swift */; };
+		00E14B5A1F4112DC00CCE1B7 /* FullScreen.html in Resources */ = {isa = PBXBuildFile; fileRef = 00E14B591F4112DC00CCE1B7 /* FullScreen.html */; };
+		00E14B601F47CA0300CCE1B7 /* FaqViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00E14B5F1F47CA0300CCE1B7 /* FaqViewController.swift */; };
 		495B195AFE9F7C368F9127D1 /* Pods_mymo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1AEC37DA2D05D4EA07C645F /* Pods_mymo.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		00008BE01EF56BF5004BFE19 /* mymo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "mymo-Bridging-Header.h"; sourceTree = "<group>"; };
 		00008BE11EF572F2004BFE19 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		00008BE51EF66A9A004BFE19 /* RequestFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestFormViewController.swift; sourceTree = "<group>"; };
 		001C12441EE25AB60001B3AF /* YouTubeClient.js */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.javascript; path = YouTubeClient.js; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; };
@@ -44,6 +46,10 @@
 		00AD04031EE98D1F00F895BE /* YouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeClient.swift; sourceTree = "<group>"; };
 		00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		00B0E7071EEC213F007F7BD4 /* ListViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListViewCell.swift; sourceTree = "<group>"; };
+		00E14B4F1F407B7B00CCE1B7 /* FullsizeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullsizeViewController.swift; sourceTree = "<group>"; };
+		00E14B551F40951300CCE1B7 /* mymo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "mymo-Bridging-Header.h"; sourceTree = "<group>"; };
+		00E14B591F4112DC00CCE1B7 /* FullScreen.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = FullScreen.html; sourceTree = "<group>"; };
+		00E14B5F1F47CA0300CCE1B7 /* FaqViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FaqViewController.swift; sourceTree = "<group>"; };
 		0F717AB41078D283AED3F653 /* Pods-MemoTube.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoTube.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MemoTube/Pods-MemoTube.debug.xcconfig"; sourceTree = "<group>"; };
 		8B68881039343BE0D2CC1435 /* Pods-MemoTube.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MemoTube.release.xcconfig"; path = "Pods/Target Support Files/Pods-MemoTube/Pods-MemoTube.release.xcconfig"; sourceTree = "<group>"; };
 		C5765834A09C8846990C1C27 /* Pods-mymo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-mymo.release.xcconfig"; path = "Pods/Target Support Files/Pods-mymo/Pods-mymo.release.xcconfig"; sourceTree = "<group>"; };
@@ -87,6 +93,7 @@
 			children = (
 				00427F4F1EE05569004CB0B7 /* AppDelegate.swift */,
 				00427F681EE18F54004CB0B7 /* YouTubeViewController.swift */,
+				00E14B4F1F407B7B00CCE1B7 /* FullsizeViewController.swift */,
 				00AD03FB1EE582D500F895BE /* Moment.swift */,
 				00AD04031EE98D1F00F895BE /* YouTubeClient.swift */,
 				00B0E7051EEC1E37007F7BD4 /* ListViewController.swift */,
@@ -95,11 +102,13 @@
 				009383161EFF96E1001D8CDC /* FirebaseClientHelper.swift */,
 				00008BE51EF66A9A004BFE19 /* RequestFormViewController.swift */,
 				00AD04011EE8527D00F895BE /* Util.swift */,
+				00E14B5F1F47CA0300CCE1B7 /* FaqViewController.swift */,
+				00E14B551F40951300CCE1B7 /* mymo-Bridging-Header.h */,
 				001C12441EE25AB60001B3AF /* YouTubeClient.js */,
+				00E14B591F4112DC00CCE1B7 /* FullScreen.html */,
 				00427F531EE05569004CB0B7 /* Main.storyboard */,
 				00427F561EE05569004CB0B7 /* Assets.xcassets */,
 				00427F581EE05569004CB0B7 /* LaunchScreen.storyboard */,
-				00008BE01EF56BF5004BFE19 /* mymo-Bridging-Header.h */,
 				00427F5B1EE05569004CB0B7 /* Info.plist */,
 				00008BE11EF572F2004BFE19 /* GoogleService-Info.plist */,
 			);
@@ -164,6 +173,11 @@
 						DevelopmentTeam = 6DK3BC5XAV;
 						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -195,6 +209,7 @@
 				00008BE21EF572F2004BFE19 /* GoogleService-Info.plist in Resources */,
 				00427F571EE05569004CB0B7 /* Assets.xcassets in Resources */,
 				00427F551EE05569004CB0B7 /* Main.storyboard in Resources */,
+				00E14B5A1F4112DC00CCE1B7 /* FullScreen.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,6 +269,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				00B0E7081EEC213F007F7BD4 /* ListViewCell.swift in Sources */,
+				00E14B501F407B7B00CCE1B7 /* FullsizeViewController.swift in Sources */,
 				009383151EFEAE11001D8CDC /* SettingViewController.swift in Sources */,
 				00AD04021EE8527D00F895BE /* Util.swift in Sources */,
 				00427F691EE18F54004CB0B7 /* YouTubeViewController.swift in Sources */,
@@ -261,6 +277,7 @@
 				00AD04041EE98D1F00F895BE /* YouTubeClient.swift in Sources */,
 				00427F501EE05569004CB0B7 /* AppDelegate.swift in Sources */,
 				009383171EFF96E1001D8CDC /* FirebaseClientHelper.swift in Sources */,
+				00E14B601F47CA0300CCE1B7 /* FaqViewController.swift in Sources */,
 				00B0E7061EEC1E37007F7BD4 /* ListViewController.swift in Sources */,
 				00AD03FC1EE582D500F895BE /* Moment.swift in Sources */,
 			);
@@ -336,6 +353,7 @@
 				PRODUCT_NAME = "";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -379,6 +397,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = mymo;
 				SDKROOT = iphoneos;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};

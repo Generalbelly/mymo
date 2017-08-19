@@ -10,6 +10,7 @@ import UIKit
 
 enum Setting: Int {
     case feedback
+    case faq
 }
 
 class SettingViewController: UIViewController {
@@ -32,14 +33,16 @@ class SettingViewController: UIViewController {
 extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Setting.feedback.rawValue + 1
+        return 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "setting", for: indexPath)
+        cell.accessoryType = .disclosureIndicator
         if indexPath.row == Setting.feedback.rawValue {
             cell.textLabel?.text = "Leave feedback"
-            cell.accessoryType = .disclosureIndicator
+        } else if indexPath.row == Setting.faq.rawValue {
+            cell.textLabel?.text = "FAQ"
         }
         return cell
     }
@@ -48,6 +51,8 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == Setting.feedback.rawValue {
             self.performSegue(withIdentifier: "rfVC", sender: self)
+        } else if indexPath.row == Setting.faq.rawValue {
+            self.performSegue(withIdentifier: "faq", sender: self)
         }
     }
 
