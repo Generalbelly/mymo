@@ -3,12 +3,12 @@
     <head>
       <title>mymo video viewer</title>
     </head>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <body>
         <style>
         * {
             box-sizing: border-box;
         }
-
         #video-background {
             background: #fff;
             position: fixed;
@@ -18,7 +18,6 @@
             left: 0;
             z-index: -99;
         }
-
         #video-foreground,
         #player {
             position: absolute;
@@ -26,17 +25,13 @@
             left: 0;
             width: 100%;
             height: 100%;
-            /*pointer-events: none;*/
         }
-
         @media (min-aspect-ratio: 16/9) {
             .video-foreground { height: 300%; top: -100%; }
         }
-
         @media (max-aspect-ratio: 16/9) {
             .video-foreground { width: 300%; left: -100%; }
         }
-
         #fab-field {
             z-index: 10000002;
             bottom: 20px;
@@ -46,11 +41,9 @@
             flex-flow: column;
             text-align: center;
         }
-
         #fab-field div {
             margin-bottom: 10px;
         }
-
         #master-fab {
             line-height: 64px;
             background-color: #171123;
@@ -62,7 +55,6 @@
             box-shadow:0px 0px 3px rgba(0,0,0,0.5),3px 3px 3px rgba(0,0,0,0.25);
             font-size: 2.6667em;
         }
-
         .fab-child {
             color: #000;
             padding-top: 7px;
@@ -75,7 +67,6 @@
             border-radius: 50%;
             box-shadow:0px 0px 3px rgba(0,0,0,0.5),3px 3px 3px rgba(0,0,0,0.25);
         }
-
         #backdrop {
             z-index: 10000001;
             position: fixed;
@@ -85,16 +76,13 @@
             right: 0;
             background: rgba(0,0,0,0.3);
         }
-
         .is-hidden {
             display: none;
         }
-
         .rotate {
             transform: rotate(-45deg);
             -webkit-transform: rotate(-45deg);
         }
-
         #close {
             display: inline-block;
             margin: 20px 0 0 10px;
@@ -110,26 +98,6 @@
             left: 5px;
             top: 5px;
         }
-
-        #memo {
-            height: 100px;
-            width: 100%;
-            position: fixed;
-            left: 0;
-            bottom: 0;
-            background-color: #fff;
-            border-color: #000;
-            border-width: 1px;
-        }
-        #memo textarea {
-            border: none;
-            color: #rgba(0, 0, 0, 0.7);
-            width: 100%;
-            height: 100%;
-            text-align: left;
-            padding: 5px;
-        }
-
         </style>
         <div id="video-background">
             <div class="video-foreground">
@@ -139,7 +107,8 @@
                         <path d="M0 0h24v24H0z" fill="none"/>
                     </svg>
                 </span>
-                <iframe id="player" src="iframeSrc" frameborder="0" allowfullscreen></iframe>
+                <iframe id="player" src="iframeSrc" frameborder="0" controls allowfullscreen></iframe>
+                <!-- <div id="player"></div> -->
                 <div id="backdrop" class="backdrop is-hidden"></div>
                 <div id="fab-field">
                     <div id="transcript" class="fab-child is-hidden">
@@ -168,176 +137,189 @@
                         </svg>
                     </div>
                     <div id="master-fab" class="fab">+</div>
-                    <div id="memo" class="is-hidden">
-                        <textarea id="content"></textarea>
-                    </div>
                 </div>
             </div>
         </div>
-    </body>
-    <script>
+        <script>
 
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            var tag = document.createElement('script');
+            tag.src = "https://www.youtube.com/iframe_api";
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        var player;
-        var videoId = 'VIDEO_ID';
+            var player;
+            // var videoId = 'VIDEO_ID';
+            // var startTime = 'START_TIME';
 
-        function onYouTubeIframeAPIReady() {
-          player = new YT.Player('player', {
-            events: {
-              'onReady': onPlayerReady,
-              'onStateChange': onPlayerStateChange,
-              'onPlaybackRateChange': onPlaybackRateChange,
-            }
-          });
-        }
-
-        function onPlayerReady(event) {
-            event.target.playVideo();
-        }
-
-        // 5. The API calls this function when the player's state changes.
-        //    The function indicates that when playing a video (state=1),
-        //    the player should play for six seconds and then stop.
-
-        // "YT.PlayerState.UNSTARTED" = -1
-        // "YT.PlayerState.ENDED" = 0
-        // "YT.PlayerState.PLAYING" = 1
-        // "YT.PlayerState.PAUSED" = 2
-        // "YT.PlayerState.BUFFERING" = 3
-        // "YT.PlayerState.CUED" = 5
-        var done = false;
-        function onPlayerStateChange(event) {
-            // if (event.data == YT.PlayerState.PLAYING && !done) {
-            //     setTimeout(stopVideo, 6000);
-            //     done = true;
-            // }
-        }
-
-        var rate = 1;
-        function changeRate() {
-            if (rate === 2.0) {
-                rate = 0.75;
-            } else if (rate === 1.5) {
-                rate = 2.0;
-            } else {
-                rate += 0.25;
-            }
-            player.setPlaybackRate(rate);
-        }
-
-        function onPlaybackRateChange(event) {
-            document.getElementById('rate').textContent = rate+'x';
-        }
-
-        function mark() {
-            player.pauseVideo();
-            var currentTime = player.getCurrentTime();
-            post('mark', {time: parseInt(currentTime)});
-        }
-
-        function getTranscript() {
-            post('transcript');
-        }
-
-        function seekTo(time) {
-            player.seekTo(time, true);
-        }
-
-        function rewind() {
-            var currentTime = player.getCurrentTime();
-            player.seekTo(currentTime - 10, true);
-        }
-
-        function pause() {
-            player.pauseVideo();
-        }
-
-        function play() {
-            player.playVideo();
-        }
-
-        function toggleMenu(e) {
-            var master = typeof e !== 'undefined' ? e.target : document.getElementById('master-fab');
-            master.classList.toggle('rotate');
-            toggle(document.getElementById('backdrop'));
-            document.querySelectorAll('.fab-child')
-                .forEach(function(el) {
-                    toggle(el);
+            function onYouTubeIframeAPIReady() {
+                player = new YT.Player('player', {
+                    // videoId: videoId,
+                    // playerVars: {
+                    //     enablejsapi: 1,
+                    //     start: startTime,
+                    //     controls: 1,
+                    //     showinfo: 0,
+                    //     autoplay: 1,
+                    //     playsinline: 1,
+                    //     fs: 0,
+                    //     rel: 0,
+                    //     modestbranding: 1
+                    // },
+                    events: {
+                        onPlaybackRateChange: onPlaybackRateChange
+                    }
                 });
-        }
-
-        function toggle(el) {
-            if (el.classList.contains('is-hidden')) {
-                fadeIn(el);
-            } else {
-                fadeOut(el);
             }
-        }
 
-        function fadeOut(el){
-            el.style.opacity = 1;
-            (function fade() {
-                if ((el.style.opacity -= .1) < 0) {
-                    el.classList.add('is-hidden');
+            var rate = 1;
+            function changeRate() {
+                if (rate === 2.0) {
+                    rate = 0.75;
+                } else if (rate === 1.5) {
+                    rate = 2.0;
                 } else {
-                    requestAnimationFrame(fade);
+                    rate += 0.25;
                 }
-            })();
-        }
+                player.setPlaybackRate(rate);
+            }
 
-        function fadeIn(el, display){
-            el.style.opacity = 0;
-            el.classList.remove('is-hidden');
+            function onPlaybackRateChange(event) {
+                document.getElementById('rate').textContent = rate+'x';
+            }
 
-            (function fade() {
-                var val = parseFloat(el.style.opacity);
-                if (!((val += .1) > 1)) {
-                    el.style.opacity = val;
-                    requestAnimationFrame(fade);
-                }
-            })();
-        }
+            function mark() {
+                player.pauseVideo();
+                var currentTime = player.getCurrentTime();
+                post('mark', {time: parseInt(currentTime)});
+            }
 
-        function exit(e) {
-            pause();
-            post("close");
-        }
+            function getTranscript() {
+                post('transcript');
+            }
 
-        function post(message, data) {
-            var data = typeof data !== 'undefined' ? '?'+ buildQuery(data) : [];
-            var url = 'mymo://' + message + data;
-            document.location.href = url;
-        }
+            function seekTo(time) {
+                player.seekTo(time, true);
+            }
 
-        function buildQuery(obj) {
-            var str = [];
-            for(var p in obj) {
-                if (obj.hasOwnProperty(p)) {
-                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+            function rewind() {
+                var currentTime = player.getCurrentTime();
+                player.seekTo(currentTime - 10, true);
+            }
+
+            function pause() {
+                player.pauseVideo();
+            }
+
+            function play() {
+                player.playVideo();
+            }
+
+            function toggleMenu(e) {
+                var master = typeof e !== 'undefined' ? e.target : document.getElementById('master-fab');
+                master.classList.toggle('rotate');
+                toggle(document.getElementById('backdrop'));
+                document.querySelectorAll('.fab-child')
+                    .forEach(function(el) {
+                        toggle(el);
+                    });
+            }
+
+            function toggle(el) {
+                if (el.classList.contains('is-hidden')) {
+                    fadeIn(el);
+                } else {
+                    fadeOut(el);
                 }
             }
-            return str.join("&");
-        }
 
-        function attachEventHandler(el, func, event) {
-            var event = typeof event !== 'undefined' ? event : 'click';
-            var control = typeof control !== 'undefined' ? control : true;
-            el.addEventListener(event, function(e) {
-                e.stopPropagation();
-                e.preventDefault();
-                func(e);
-            });
-        }
+            function fadeOut(el){
+                el.style.opacity = 1;
+                (function fade() {
+                    if ((el.style.opacity -= .1) < 0) {
+                        el.classList.add('is-hidden');
+                    } else {
+                        requestAnimationFrame(fade);
+                    }
+                })();
+            }
 
-        attachEventHandler(document.getElementById('close'), exit);
-        attachEventHandler(document.getElementById('rewind'), rewind);
-        attachEventHandler(document.getElementById('mark'), mark);
-        attachEventHandler(document.getElementById('rate'), changeRate);
-        attachEventHandler(document.getElementById('transcript'), getTranscript);
-        attachEventHandler(document.getElementById('master-fab'), toggleMenu);
-    </script>
+            function fadeIn(el, display){
+                el.style.opacity = 0;
+                el.classList.remove('is-hidden');
+
+                (function fade() {
+                    var val = parseFloat(el.style.opacity);
+                    if (!((val += .1) > 1)) {
+                        el.style.opacity = val;
+                        requestAnimationFrame(fade);
+                    }
+                })();
+            }
+
+            function exit(e) {
+                post("close");
+            }
+
+            function post(message, data) {
+                var data = typeof data !== 'undefined' ? '?'+ buildQuery(data) : [];
+                var url = 'mymo://' + message + data;
+                document.location.href = url;
+            }
+
+            function buildQuery(obj) {
+                var str = [];
+                for(var p in obj) {
+                    if (obj.hasOwnProperty(p)) {
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                    }
+                }
+                return str.join("&");
+            }
+
+            function attachEventHandler(el, func, event) {
+                var event = typeof event !== 'undefined' ? event : 'click';
+                var control = typeof control !== 'undefined' ? control : true;
+                el.addEventListener(event, function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    func(e);
+                });
+            }
+
+            attachEventHandler(document.getElementById('close'), exit);
+            attachEventHandler(document.getElementById('rewind'), rewind);
+            attachEventHandler(document.getElementById('mark'), mark);
+            attachEventHandler(document.getElementById('rate'), changeRate);
+            attachEventHandler(document.getElementById('transcript'), getTranscript);
+            attachEventHandler(document.getElementById('master-fab'), toggleMenu);
+
+
+            // function message() {
+            //   var logItem = document.createElement('div');
+            //   var textContent = [];
+            //   for (var i = 0; i < arguments.length; i++) { textContent.push(JSON.stringify(arguments[i], null, 4)); }
+            //   logItem.textContent = textContent.join(' | ');
+            //   log.appendChild(logItem);
+            //   log.scrollTop = 99999999999;
+            // }
+            //
+            // var log = document.createElement('div');
+            // log.style.zIndex = 9999;
+            // log.style.position = 'fixed';
+            // log.style.top = 'auto';
+            // log.style.fontSize = '10px';
+            // log.style.fontFamily = 'monospace';
+            // log.style.left = 0;
+            // log.style.right = 0;
+            // log.style.bottom = '100px';
+            // log.style.background = '#f0f0f0';
+            // log.style.height = '100px';
+            // log.style.border = '1px solid #cdcdcd';
+            // log.style.overflow = 'auto';
+            // log.style.opacity = 0.7;
+            // document.body.appendChild(log);
+            // message('Log initialized!');
+
+        </script>
+    </body>
 </html>

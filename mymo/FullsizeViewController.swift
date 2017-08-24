@@ -22,19 +22,7 @@ class FullsizeViewController: UIViewController {
     }
     var videoId: String = ""
     var videoTitle: String = ""
-    var startingTime: Int = 0
-    
-    var alertController: UIAlertController! {
-        didSet {
-            let OKAction = UIAlertAction(title: "OK", style: .default) { [unowned self] action in
-                self.dismiss(animated: true, completion: nil)
-                if self.alertController.message != "You are not watching anything." {
-                    self.alertController.message = "You are not watching anything."
-                }
-            }
-            self.alertController.addAction(OKAction)
-        }
-    }
+    var startTime: Int = 0
     
     // Transcript
     var transcriptView: UITextView! {
@@ -68,7 +56,7 @@ class FullsizeViewController: UIViewController {
         didSet {
             if self.moment != nil {
                 self.videoId = moment!.videoId
-                self.startingTime = moment!.time
+                self.startTime = moment!.time
             }
         }
     }
@@ -102,12 +90,11 @@ class FullsizeViewController: UIViewController {
         // Enable the app to play an audio on the background.
         do {
             try AVAudioSession.sharedInstance().setCategory(
-                AVAudioSessionCategoryPlayAndRecord,
+                AVAudioSessionCategoryPlayback,
                 with: .defaultToSpeaker)
         } catch {
             print("Failed to set audio session category.  Error: \(error)")
         }
-        self.alertController = UIAlertController(title: "Oops", message: "You are not watching anything.", preferredStyle: .alert)
         self.transcriptController = UIAlertController(title: "Sorry", message: "The transcript is not available.", preferredStyle: .alert)
         
         
@@ -121,7 +108,7 @@ class FullsizeViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        webView.loadHTMLString(self.getSource(fileName: "FullScreen", type: "html").replacingFirstOccurrenceOfString(target: "iframeSrc", with: "https://www.youtube.com/embed/\(videoId)?start=\(self.startingTime)&controls=1&showinfo=0&autoplay=1&playsinline=1&enablejsapi=1&fs=0&rel=0&modestbranding=1"), baseURL: nil)
+        webView.loadHTMLString(self.getSource(fileName: "FullScreen", type: "html").replacingFirstOccurrenceOfString(target: "iframeSrc", with: "https://www.youtube.com/embed/\(videoId)?enablejsapi=1&start=\(self.startTime)&controls=1&showinfo=0&autoplay=1&playsinline=1&fs=0&rel=0&modestbranding=1"), baseURL: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
     }
@@ -135,7 +122,7 @@ class FullsizeViewController: UIViewController {
         self.moment = nil
         self.videoId = ""
         self.videoTitle = ""
-        self.startingTime = 0
+        self.startTime = 0
     }
     
     func getSource(fileName: String, type: String) -> String {

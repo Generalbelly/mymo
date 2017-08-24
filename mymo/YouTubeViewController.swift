@@ -92,7 +92,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
     // Video property
     var speedType: SpeedType = .normal
     var pausedTime = 0
-    var fullsizeViewStartingTime = 0
+    var fullsizeViewStartTime = 0
     
     // Moment
     var moment: Moment?
@@ -337,7 +337,7 @@ class YouTubeViewController: UIViewController, WKUIDelegate {
            let videoId = Util.getQueryStringParameter(url: self.webView.url?.absoluteString, param: "v") {
             fvc.videoId = videoId
             fvc.videoTitle = self.webView.title ?? ""
-            fvc.startingTime = self.fullsizeViewStartingTime
+            fvc.startTime = self.fullsizeViewStartTime
         }
     }
 
@@ -357,7 +357,7 @@ extension YouTubeViewController: WKScriptMessageHandler, WKNavigationDelegate {
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "mymo" {
 //            if let message = message.body as? String, message.contains("fullScreen") {
-            self.fullsizeViewStartingTime = message.body as! Int
+            self.fullsizeViewStartTime = message.body as! Int
             self.performSegue(withIdentifier: "fullScreen", sender: self)
 //            }
         }

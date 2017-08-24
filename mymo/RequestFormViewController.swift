@@ -49,9 +49,13 @@ class RequestFormViewController: FormViewController {
     
     override func keyboardWillShow(_ notification: Notification) {
         super.keyboardWillShow(notification)
-        if let youtubVC = self.parent?.tabBarController?.viewControllers?[0] as? YouTubeViewController {
-            youtubVC.menuButton.open()
-            youtubVC.menuButton.close()
+        if #available(iOS 10.0, *) {
+            if let youtubVC = self.parent?.tabBarController?.viewControllers?[0] as? YouTubeViewController {
+                youtubVC.menuButton.open()
+                youtubVC.menuButton.close()
+            }
+        } else {
+            // Fallback on earlier versions
         }
     }
 

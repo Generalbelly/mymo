@@ -64,5 +64,11 @@ struct Util {
             return 2.0
         }
     }
+    
+    static func getSource(fileName: String, type: String) -> String {
+        let sourcePath = Bundle.main.path(forResource: fileName, ofType: type)
+        let content = try! String(contentsOfFile: sourcePath!).trimmingCharacters(in: .whitespacesAndNewlines)
+        return content
+    }
 }
 
